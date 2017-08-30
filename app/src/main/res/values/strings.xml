@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Student Tracker</string>
+    <string name="behaviorPrompt">Choose a Behavior</string>
+    <string-array name="behaviorsPositive">
+        <item>Well Prepared</item>
+        <item>Quality Contribution</item>
+        <item>Positive Attitude</item>
+        <item>Strong Effort</item>
+        <item>Encouraged Others</item>
+        <item>Expressed Confidence</item>
+        <item>Motivated Others</item>
+        <item>Participated in Class Discussion</item>
+    </string-array>
+    <string-array name="behaviorsNegative">
+        <item>Sleeping</item>
+        <item>Using Phone</item>
+        <item>Talking</item>
+        <item>Working on Other Class Work</item>
+        <item>Inappropriate Attire</item>
+        <item>Dominating Discussion</item>
+        <item>Unprepared</item>
+        <item>Negative Attitude</item>
+        <item>No Effort Shown</item>
+        <item>Arrogant</item>
+    </string-array>
+    <string-array name="attendanceChoices">
+        <item>Present</item>
+        <item>Absent</item>
+    </string-array>
+    <string-array name="punctualityChoices">
+        <item>On Time</item>
+        <item>Tardy</item>
+        <item>Left Early</item>
+    </string-array>
+</resources>
