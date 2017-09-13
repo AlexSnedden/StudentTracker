@@ -10,20 +10,18 @@ public class PaperTest {
     private final int integer;
     private final double decimal;
     private final String word;
-    private final String ID;
+    private final String name;
 
-    PaperTest(int integer, double decimal, String word, String ID) {
+    public static PaperTest getObject(String ID, String name) {
+        return Paper.book(ID).read(name);
+    }
+
+    PaperTest(int integer, double decimal, String word, String name) {
         this.integer = integer;
         this.decimal = decimal;
         this.word = word;
-        this.ID = ID;
-    }
-
-    PaperTest(String ID) {
-        this.ID = ID;
-        this.integer = Paper.book(ID).read("integer");
-        this.decimal = Paper.book(ID).read("decimal");
-        this.word = Paper.book(ID).read("word");
+        this.name = name;
+        saveObject();
     }
 
     public String getWord() {
@@ -39,8 +37,6 @@ public class PaperTest {
     }
 
     public void saveObject() {
-        Paper.book(ID).write("integer", integer);
-        Paper.book(ID).write("decimal", decimal);
-        Paper.book(ID).write("word", word);
+        Paper.book(ID).write(name, this);
     }
 }
