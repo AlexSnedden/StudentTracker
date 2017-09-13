@@ -25,28 +25,28 @@
         android:id="@+id/integerInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginTop="-58dp"
         android:ems="10"
         android:inputType="number"
-        android:text="integer"
-        android:layout_marginTop="-58dp"
-        app:layout_constraintTop_toBottomOf="@+id/wordInput"
-        android:layout_marginLeft="-10dp"
-        app:layout_constraintLeft_toLeftOf="@+id/wordInput" />
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/wordInput"
+        app:layout_constraintTop_toBottomOf="@+id/wordInput" />
 
     <EditText
         android:id="@+id/decimalInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:text="decimal"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/integerInput"
-        android:layout_marginLeft="0dp"
+        android:text="0.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/integerInput"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/integerInput"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/integerInput" />
 
     <Button
         android:id="@+id/createBtn"
