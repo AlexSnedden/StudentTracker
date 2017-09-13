@@ -6,13 +6,4 @@
     android:layout_height="match_parent"
     tools:context="net.pinaz993.studenttracker.MainActivity">
 
-    <Spinner
-        android:id="@+id/behaviorChooser"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:entries="@array/behaviorsPositive"
-        android:prompt="@string/behaviorPrompt"
-        android:spinnerMode="dialog"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="132dp" />
 </android.support.constraint.ConstraintLayout>
