@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PaperDemo"></activity>
+        <activity android:name=".PaperDemo" />
+        <activity android:name=".PaperView"></activity>
     </application>
 
 </manifest>

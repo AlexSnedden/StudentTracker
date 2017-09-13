@@ -11,8 +11,9 @@ public class PaperTest {
     private final double decimal;
     private final String word;
     private final String name;
+    private static final String ID = "test";
 
-    public static PaperTest getObject(String ID, String name) {
+    public static PaperTest getObject(String name) {
         return Paper.book(ID).read(name);
     }
 
