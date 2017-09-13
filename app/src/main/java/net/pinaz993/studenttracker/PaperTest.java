@@ -7,8 +7,8 @@ import io.paperdb.Paper;
  */
 
 public class PaperTest {
-    private final int integer;
-    private final double decimal;
+    private final Integer integer;
+    private final Double decimal;
     private final String word;
     private final String name;
     private static final String ID = "test";
@@ -17,7 +17,7 @@ public class PaperTest {
         return Paper.book(ID).read(name);
     }
 
-    PaperTest(int integer, double decimal, String word, String name) {
+    PaperTest(Integer integer, Double decimal, String word, String name) {
         this.integer = integer;
         this.decimal = decimal;
         this.word = word;
@@ -29,11 +29,9 @@ public class PaperTest {
         return word;
     }
 
-    public double getDecimal() {
-        return decimal;
-    }
+    public Double getDecimal() {return decimal;}
 
-    public int getInteger() {
+    public Integer getInteger() {
         return integer;
     }
 

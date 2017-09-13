@@ -1,5 +1,6 @@
 package net.pinaz993.studenttracker;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,7 @@ public class PaperDemo extends AppCompatActivity {
         final EditText decimalInput = (EditText)findViewById(R.id.decimalInput);
         final EditText nameInput = (EditText)findViewById(R.id.nameInput);
         final Button createBtn = (Button)findViewById(R.id.createBtn);
-
+        final Snackbar success = Snackbar.make(createBtn, "Object created.", Snackbar.LENGTH_SHORT);
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,6 +29,7 @@ public class PaperDemo extends AppCompatActivity {
                 Double decimal = Double.parseDouble(decimalInput.getText().toString());
 
                 PaperTest object = new PaperTest(integer, decimal, word, name);
+                success.show();
             }
         });
     }
