@@ -15,21 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Paper.init(this);
-
-        Button demoBtn = (Button)findViewById(R.id.demoBtn);
-        Button viewBtn = (Button)findViewById(R.id.viewBtn);
-        demoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, PaperDemo.class));
-            }
-        });
-        viewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, PaperView.class));
-            }
-        });
+        Paper.init(getApplicationContext());
     }
 }
