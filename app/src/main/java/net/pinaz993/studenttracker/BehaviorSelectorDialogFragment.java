@@ -14,7 +14,7 @@ public class BehaviorSelectorDialogFragment extends DialogFragment {
      * A pop-up dialog used to select multiple behaviors. It will conditionally format each choice
      * based on whether it is active or not, and whether the behavior is positive or negative.
      * It is meant to be constructed on the fly, and when the dialog is closed, it is destroyed.
-     * It interacts with the Student object to story timestamped data about the student.
+     * It interacts with the Student object to store timestamped data about the student.
      */
 
 }

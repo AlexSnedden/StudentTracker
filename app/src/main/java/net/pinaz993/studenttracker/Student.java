@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import io.paperdb.Paper;
+
+import static android.provider.Settings.Global.getString;
+
 /**
  * Created by Patrick Shannon on 8/30/2017.
  * This packacge is for the Student Object, and all related objects.
  */
 
 public class Student {
+    final static String BOOK_ID = "students";
     private final String firstName;
     private final String lastName;
     private final String email;
@@ -17,6 +22,11 @@ public class Student {
     private boolean delinquent; // condition for read formatting on the student's name
     private ArrayList<AttendanceRecord> attendanceRecords;
     private transient AttendanceSummary summary;
+
+    public static Student retrieve(String studentID) {
+        return Paper.book(BOOK_ID).read(studentID);
+    }
+
     /**
      *
      * @param firstName First name of student
@@ -24,8 +34,7 @@ public class Student {
      * @param email Email of the student, can be null
      * @param studentID A value unique to each student. Will be used as a primary key.
      */
-
-    Student(String firstName, String lastName, String email, String studentID) {
+    Student(String firstName, String lastName, String studentID, String email) {
         //Using params, we grab the information needed to represent the student.
         this.firstName = firstName;
         this.lastName = lastName;
@@ -85,7 +94,7 @@ public class Student {
     }
 
     public void save() {
-        // TODO: finish Student.save()
+        Paper.book(BOOK_ID).write(studentID, this);
     }
 }
 
