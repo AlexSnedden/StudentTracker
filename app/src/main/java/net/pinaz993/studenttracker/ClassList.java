@@ -14,7 +14,7 @@ public class ClassList {
      */
     final static String BOOK_ID = "ClassLists";
     private String classListID;
-    private ArrayList<Student> students;
+    private ArrayList<String> studentIDs;
 
     public static ClassList retrieve(String classListID){
         /*
@@ -32,7 +32,7 @@ public class ClassList {
 
     public void putToBed(){
         /*
-        serialise each student, commiting student IDs to memory in array list
+        serialize each student, committing student IDs to memory in array list
         Kill student objects
         Kill transient array list of student objects
         serialize this
@@ -40,6 +40,7 @@ public class ClassList {
 
          */
         //TODO: implement ClassList.putToBed
+        ArrayList<Student> students;
 
     }
 
