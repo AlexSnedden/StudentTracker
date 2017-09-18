@@ -1,8 +1,10 @@
 package net.pinaz993.studenttracker;
 
+import com.opencsv.CSVReader;
+
+import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import io.paperdb.Paper;
 
 /**
@@ -22,17 +24,50 @@ public class ClassList {
         /*
         grab the classList from Paper with this ID
          */
-        return Paper.book(BOOK_ID).read(classListID);
+        ClassList classList = Paper.book(BOOK_ID).read(classListID);
+        classList.populateStudents();
+        return classList;
     }
+
+    ClassList(String classListID) {
+        this.classListID = classListID;
+    }
+
+    public void importStudents(String csvStudentIDData) {
+        /*
+
+         */
+        CharArrayReader csvStudentIDDataReader = new CharArrayReader(csvStudentIDData);
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+        studentIDs.add(student.studentID);
+    }
+
+    public void removeStudent(Student student) {
+        /* assumes student points to the same object that needs to be removed */
+        Iterator<Student> studentsIterator = students.listIterator();
+        Student currentStudent;
+        while(studentsIterator.hasNext()) {
+            currentStudent = studentsIterator.next();
+            if(currentStudent == student) {
+                students.remove(currentStudent);
+                break;
+            }
+        }
+    }
+
 
     public void save(){
         /*
         save this object to disk with array list of student ids
          */
+
         Paper.book(BOOK_ID).write(this.classListID, this);
     }
 
-    public void compileStudents() {
+    public void populateStudents() {
         /*
         read each student from disk and insert them into transient student array list
          */
@@ -63,8 +98,8 @@ public class ClassList {
         // call garbage collector on them.
         student = null;
         students = null;
-        System.gc();
         save();
+        // pointer to this object must be set to null from outside to ensure garbage collection.
     }
 
 }
