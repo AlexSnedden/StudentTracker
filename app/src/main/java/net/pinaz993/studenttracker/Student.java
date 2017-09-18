@@ -60,6 +60,7 @@ public class Student {
         this.summary = null;
     }
 
+
     /**
      * Takes attendance data and records it in storage
      * @param present If the student was there at all
@@ -96,6 +97,16 @@ public class Student {
     public void save() {
         Paper.book(BOOK_ID).write(studentID, this);
     }
+
+    public String getFirstName() {return firstName;}
+
+    public String getLastName() {return lastName;}
+
+    public String getEmail() {return email;}
+
+    public String getStudentID() {return studentID;}
+
+    public String getFullName() {return firstName + " " + lastName;}
 }
 
 class AttendanceRecord {
