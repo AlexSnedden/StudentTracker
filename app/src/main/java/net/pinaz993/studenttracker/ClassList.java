@@ -1,6 +1,7 @@
 package net.pinaz993.studenttracker;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import io.paperdb.Paper;
 
@@ -14,6 +15,7 @@ public class ClassList {
      */
     final static String BOOK_ID = "ClassLists";
     private String classListID;
+    private transient ArrayList<Student> students;
     private ArrayList<String> studentIDs;
 
     public static ClassList retrieve(String classListID){
@@ -30,6 +32,16 @@ public class ClassList {
         Paper.book(BOOK_ID).write(this.classListID, this);
     }
 
+    public void compileStudents() {
+        /*
+        read each student from disk and insert them into transient student array list
+         */
+        Iterator<String> studentIDsIterator = studentIDs.listIterator();
+        while(studentIDsIterator.hasNext()) {
+            students.add(Student.retrieve(studentIDsIterator.next()));
+        }
+    }
+
     public void putToBed(){
         /*
         serialize each student, committing student IDs to memory in array list
@@ -39,9 +51,20 @@ public class ClassList {
         suicide
 
          */
-        //TODO: implement ClassList.putToBed
-        ArrayList<Student> students;
 
+        Iterator<Student> studentsIterator = students.listIterator();
+        Student student;
+        while(studentsIterator.hasNext()) {
+            student = studentsIterator.next();
+            studentIDs.add(student.studentID);
+            student.save();
+        }
+        // ensure student pointer is null as well as pointer to array list of students, then
+        // call garbage collector on them.
+        student = null;
+        students = null;
+        System.gc();
+        save();
     }
 
 }

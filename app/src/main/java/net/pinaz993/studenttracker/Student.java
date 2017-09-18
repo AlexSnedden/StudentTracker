@@ -18,7 +18,7 @@ public class Student {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String studentID;
+    final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
     private ArrayList<AttendanceRecord> attendanceRecords;
     private transient AttendanceSummary summary;
