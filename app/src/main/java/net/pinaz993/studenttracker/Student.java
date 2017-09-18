@@ -14,7 +14,7 @@ import static android.provider.Settings.Global.getString;
  */
 
 public class Student {
-    final static String BOOK_ID = "students";
+    private final static String BOOK_ID = "students";
     private final String firstName;
     private final String lastName;
     private final String email;
@@ -99,7 +99,9 @@ public class Student {
 }
 
 class AttendanceRecord {
-    Date timestamp;
+    //TODO: How do we know what class the student was present/absent for?
+    //TODO: What if the record needs to be changed?
+    private Date timestamp;
     boolean present, lateArrival, earlyDeparture;
 
     AttendanceRecord(boolean present, boolean lateArrival, boolean earlyDeparture) {
