@@ -31,13 +31,15 @@ public class ClassList {
 
     ClassList(String classListID) {
         this.classListID = classListID;
+        this.students = new ArrayList<Student>();
+        this.studentIDs = new ArrayList<String>();
     }
 
     public void importStudents(String csvStudentIDData) {
         /*
 
          */
-        CharArrayReader csvStudentIDDataReader = new CharArrayReader(csvStudentIDData);
+        CharArrayReader csvStudentIDDataReader = new CharArrayReader(csvStudentIDData.toCharArray());
     }
 
     public void addStudent(Student student) {
