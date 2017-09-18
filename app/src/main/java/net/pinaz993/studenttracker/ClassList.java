@@ -36,9 +36,6 @@ public class ClassList {
     }
 
     public void importStudents(String csvStudentIDData) {
-        /*
-
-         */
         CharArrayReader csvStudentIDDataReader = new CharArrayReader(csvStudentIDData.toCharArray());
     }
 
