@@ -31,4 +31,15 @@
         app:layout_constraintTop_toBottomOf="@+id/demoBtn"
         app:layout_constraintHorizontal_bias="0.285" />
 
+    <Switch
+        android:id="@+id/switch1"
+        style="@style/Switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Switch"
+        app:layout_constraintTop_toBottomOf="@+id/viewBtn"
+        tools:layout_editor_absoluteX="151dp"
+        tools:layout_editor_absoluteY="171dp" />
+
 </android.support.constraint.ConstraintLayout>
