@@ -59,8 +59,6 @@ public class Student {
         this.attendanceRecords = new ArrayList<>();
         this.summary = null;
     }
-
-
     /**
      * Takes attendance data and records it in storage
      * @param present If the student was there at all
@@ -85,7 +83,6 @@ public class Student {
         this.summary = new AttendanceSummary(this.attendanceRecords);
     }
 
-
     public boolean isDelinquent() {
         return delinquent;
     }
@@ -107,11 +104,12 @@ public class Student {
     public String getStudentID() {return studentID;}
 
     public String getFullName() {return firstName + " " + lastName;}
+
+    //TODO: Write a record replacement method in case of inaccuracies
 }
 
 class AttendanceRecord {
     //TODO: How do we know what class the student was present/absent for?
-    //TODO: What if the record needs to be changed?
     private Date timestamp;
     boolean present, lateArrival, earlyDeparture;
 

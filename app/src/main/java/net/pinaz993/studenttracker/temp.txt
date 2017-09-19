@@ -1,15 +1,3 @@
-package net.pinaz993.studenttracker;
-
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
-import android.util.AttributeSet;
-import android.view.View;
-
 /**
  * StudentPaneView is a view that displays information about and presents interactivity for an
  * instance of the Student class. It contains the name of the student, a switch for present/absent,
@@ -23,14 +11,13 @@ import android.view.View;
  */
 public class StudentPaneView extends View {
 
-    public StudentPaneView(Context context, Student student) {
-        super(context);
-    }
+    // Child views
+    View rootView;
+    TextView studentNameTxt;
+    ToggleButton lateArrivalBtn;
+    ToggleButton earlyDepartureBtn;
+    SwitchCompat APSwitch;
 
-
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-}
+    // I need something for the transition between the main pane and the hidden one
+    // I need something to catch the swipe left and swipe right actions
+    // I need something for the long press, eventually
