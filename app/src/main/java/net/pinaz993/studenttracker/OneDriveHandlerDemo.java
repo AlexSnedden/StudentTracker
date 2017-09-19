@@ -13,7 +13,7 @@ public class OneDriveHandlerDemo extends AppCompatActivity {
 
         WebView webview = new WebView(this);
         setContentView(webview);
-        webview.loadUrl("https://example.com/");
+        webview.loadUrl("https://www.google.com/");
 
 
     }
