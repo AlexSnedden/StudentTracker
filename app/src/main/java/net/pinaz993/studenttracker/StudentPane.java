@@ -3,12 +3,12 @@ package net.pinaz993.studenttracker;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,7 +47,7 @@ public class StudentPane extends SwipeRevealLayout {
 
 
 
-    public StudentPane(Context context,Student student) {
+    public StudentPane(Context context, Student student) {
         super(context);
         init(context);
         this.student = student;
@@ -71,11 +71,11 @@ public class StudentPane extends SwipeRevealLayout {
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.MATCH_PARENT);
         LinearLayout bottomLayout = new LinearLayout(context);
-        bottomLayout.setLayoutParams(bLParams);
-        bottomLayout.setGravity(5|10);
+        bLParams.gravity = 5|10;
         bottomLayout.setOrientation(LinearLayout.HORIZONTAL);
         bottomLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         bottomLayout.setLayoutDirection(LAYOUT_DIRECTION_RTL);
+        this.addView(bottomLayout, bLParams);
 
         //Excused Button
         ToggleButton excusedBtn = new ToggleButton(context);
@@ -100,25 +100,25 @@ public class StudentPane extends SwipeRevealLayout {
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         LinearLayout topLayout = new LinearLayout(context);
-        topLayout.setLayoutParams(tLParams);
         topLayout.setOrientation(LinearLayout.HORIZONTAL);
         topLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
         topLayout.setWeightSum(1);
+        this.addView(topLayout, tLParams);
 
         //Student Name Text View
         TextView studentNameView = new TextView(context);
-        LinearLayoutCompat.LayoutParams sNParams = new LinearLayoutCompat.LayoutParams(
+        LinearLayout.LayoutParams sNParams = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.MATCH_PARENT,
                 (float).85);
-        sNParams.gravity = 10;
+        sNParams.gravity = Gravity.CENTER_VERTICAL;
         studentNameView.setText(student.getFullName());
         studentNameView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         topLayout.addView(studentNameView, sNParams);
 
         //Absent|Present Switch
         SwitchCompat aPSwitch = new SwitchCompat(context);
-        LinearLayoutCompat.LayoutParams aPParams = new LinearLayoutCompat.LayoutParams(
+        LinearLayout.LayoutParams switchParams = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.MATCH_PARENT,
                 (float).15);
@@ -140,17 +140,8 @@ public class StudentPane extends SwipeRevealLayout {
 
         ColorStateList thumbColors = new ColorStateList(statesList, thumbColorsList);
         ColorStateList trackColors = new ColorStateList(statesList, trackColorsList);
-        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getThumbDrawable()), thumbColors);
-        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getTrackDrawable()), trackColors);
-
-        topLayout.addView(aPSwitch, aPParams);
-
-
-
-
-
-
-
-
+//        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getThumbDrawable()), thumbColors);  //Crashy
+//        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getTrackDrawable()), trackColors);  //Crashy
+//        topLayout.addView(aPSwitch, switchParams);  //Crashy
     }
 }
