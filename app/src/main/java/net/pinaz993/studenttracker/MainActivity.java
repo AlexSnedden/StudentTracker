@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    /* temporary function to test ui with students objects */
     private ArrayList<Student> generateStudents(int numStudents) {
         ArrayList<Student> students = new ArrayList<>();
         for(int i=0; i < numStudents; i++) {
