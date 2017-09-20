@@ -23,16 +23,9 @@
         <item>No Effort Shown</item>
         <item>Arrogant</item>
     </string-array>
-    <string-array name="attendanceChoices">
-        <item>Present</item>
-        <item>Absent</item>
-    </string-array>
-    <string-array name="punctualityChoices">
-        <item>On Time</item>
-        <item>Tardy</item>
-        <item>Left Early</item>
-    </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lateArrivalTxt">Late\nArrival</string>
+    <string name="earlyDepartureTxt">Early\nDeparture</string>
+    <string name="invalidStudentTxt">Invalid Student</string>
+    <string name="excusedTxt">Excused</string>
 </resources>

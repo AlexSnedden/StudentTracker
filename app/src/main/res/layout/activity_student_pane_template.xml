@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:dragEdge="right"
+    tools:context="net.pinaz993.studenttracker.StudentPaneTemplate">
+
+    <!--Bottom Layout-->
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#DDDDDD"
+        android:gravity="right|center_vertical"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/excusedBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textOff="@string/excusedTxt"
+            android:textOn="@string/excusedTxt" />
+
+        <ToggleButton
+            android:id="@+id/earlyDepartureBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textOff="@string/earlyDepartureTxt"
+            android:textOn="@string/earlyDepartureTxt" />
+
+        <ToggleButton
+            android:id="@+id/lateArrivalBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textOff="@string/lateArrivalTxt"
+            android:textOn="@string/lateArrivalTxt" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/studentNameTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2.73"
+            android:gravity="center_vertical"
+            android:text="@string/invalidStudentTxt"
+            android:textAlignment="center" />
+
+        <Switch
+            android:id="@+id/APSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15" />
+    </LinearLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>
