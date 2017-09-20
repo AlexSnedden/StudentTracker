@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
+import java.util.ArrayList;
+
 import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,5 +34,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private ArrayList<Student> generateStudents(int numStudents) {
+        ArrayList<Student> students = new ArrayList<>();
+        for(int i=0; i < numStudents; i++) {
+            students.add(new Student("Richie", "Rich", String.valueOf(i), "richierich@gmail.com"));
+        }
+        return students;
     }
 }
