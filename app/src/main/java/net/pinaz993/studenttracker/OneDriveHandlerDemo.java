@@ -13,8 +13,10 @@ public class OneDriveHandlerDemo extends AppCompatActivity {
 
         WebView webview = new WebView(this);
         setContentView(webview);
-        webview.loadUrl("https://www.google.com/");
 
+        OnedriveHandler onedrivehandler = new OnedriveHandler();
+        webview.loadUrl(onedrivehandler.getUserAuthenticationUrl());
 
     }
+
 }
