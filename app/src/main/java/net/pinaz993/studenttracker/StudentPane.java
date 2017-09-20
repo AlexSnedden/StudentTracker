@@ -1,8 +1,11 @@
 package net.pinaz993.studenttracker;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
@@ -104,10 +107,47 @@ public class StudentPane extends SwipeRevealLayout {
 
         //Student Name Text View
         TextView studentNameView = new TextView(context);
-        LinearLayoutCompat.LayoutParams sNparams = bLParams;
-        sNparams.weight = (float).85;
-        studentNameView.setGravity(10);
+        LinearLayoutCompat.LayoutParams sNParams = new LinearLayoutCompat.LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.MATCH_PARENT,
+                (float).85);
+        sNParams.gravity = 10;
         studentNameView.setText(student.getFullName());
+        studentNameView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        topLayout.addView(studentNameView, sNParams);
+
+        //Absent|Present Switch
+        SwitchCompat aPSwitch = new SwitchCompat(context);
+        LinearLayoutCompat.LayoutParams aPParams = new LinearLayoutCompat.LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.MATCH_PARENT,
+                (float).15);
+        // Color states for the aforementioned switch
+        int[][] statesList = new int[][] {
+                new int[]{-android.R.attr.state_enabled},
+                new int[]{android.R.attr.state_checked}
+        };
+
+        int[] thumbColorsList = new int[] {
+                Color.GREEN,
+                Color.RED
+        };
+
+        int[] trackColorsList = new int[] {
+                Color.parseColor("#aaffaa"),
+                Color.parseColor("#ffaaaa")
+        };
+
+        ColorStateList thumbColors = new ColorStateList(statesList, thumbColorsList);
+        ColorStateList trackColors = new ColorStateList(statesList, trackColorsList);
+        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getThumbDrawable()), thumbColors);
+        DrawableCompat.setTintList(DrawableCompat.wrap(aPSwitch.getTrackDrawable()), trackColors);
+
+        topLayout.addView(aPSwitch, aPParams);
+
+
+
+
 
 
 
