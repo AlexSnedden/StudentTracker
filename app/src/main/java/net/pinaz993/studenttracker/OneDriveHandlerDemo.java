@@ -15,7 +15,7 @@ public class OneDriveHandlerDemo extends AppCompatActivity {
         setContentView(webview);
 
         OnedriveHandler onedrivehandler = new OnedriveHandler();
-        webview.loadUrl(onedrivehandler.getUserAuthenticationUrl());
+        webview.loadUrl("https://www.google.com");
 
     }
 
