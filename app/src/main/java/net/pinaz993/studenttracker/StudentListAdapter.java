@@ -25,6 +25,6 @@ public class StudentListAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return new StudentPane(this.getContext(), students[position]);
+        return new StudentPaneAdapter(this.getContext(), students[position]);
     }
 }

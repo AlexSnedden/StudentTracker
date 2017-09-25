@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeContainer"
-    android:layout_width="match_parent"
+    tools:context="net.pinaz993.studenttracker.StudentPaneAdapter"
+    android:id="@+id/swipe"
     android:layout_height="match_parent"
-    app:dragEdge="right"
-    tools:context="net.pinaz993.studenttracker.StudentPaneTemplate">
+    android:layout_width="match_parent">
 
     <!--Bottom Layout-->
     <LinearLayout
@@ -38,7 +36,6 @@
             android:layout_height="match_parent"
             android:textOff="@string/lateArrivalTxt"
             android:textOn="@string/lateArrivalTxt" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -46,7 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/studentNameTxt"
@@ -57,10 +55,11 @@
             android:text="@string/invalidStudentTxt"
             android:textAlignment="center" />
 
-        <Switch
-            android:id="@+id/APSwitch"
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/absentPresentSwitch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.15" />
+            android:layout_weight="0.15"
+            style="@style/SwitchRedGreen"/>
     </LinearLayout>
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

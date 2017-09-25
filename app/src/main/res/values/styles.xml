@@ -7,4 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    
+    <!--theme for switches of Red and Green-->
+    <style name="SwitchRedGreen" parent="AppTheme">
+        <item name="android:thumbTint">@color/thumb_colors</item>
+    </style>
 </resources>

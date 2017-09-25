@@ -18,7 +18,7 @@ public class Student {
     private final String firstName;
     private final String lastName;
     private final String email;
-    final String studentID;
+    private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
     private ArrayList<AttendanceRecord> attendanceRecords;
     private transient AttendanceSummary summary;
@@ -65,12 +65,12 @@ public class Student {
      * @param lateArrival If the student arrived late to class
      * @param earlyDeparture If the student left class early
      */
-    public void recordAttendance(boolean present, boolean lateArrival, boolean earlyDeparture){
-        this.attendanceRecords.add(new AttendanceRecord(present, lateArrival, earlyDeparture));
+    public void recordAttendance(){
+        //TODO: Replace with S
     }
 
     public void recordDatedAttendance(boolean present, boolean lateArrival, boolean earlyDeparture,
-                                      Date timestamp) {
+                                      Date timestamp, String classID) {
         AttendanceRecord record = new AttendanceRecord(timestamp, present, lateArrival,
                                                        earlyDeparture);
         this.attendanceRecords.add(record);
@@ -83,13 +83,9 @@ public class Student {
         this.summary = new AttendanceSummary(this.attendanceRecords);
     }
 
-    public boolean isDelinquent() {
-        return delinquent;
-    }
+    public boolean isDelinquent() { return delinquent; }
 
-    public void setDelinquent(boolean delinquent) {
-        this.delinquent = delinquent;
-    }
+    public void setDelinquent(boolean delinquent) { this.delinquent = delinquent; }
 
     public void save() {
         Paper.book(BOOK_ID).write(studentID, this);
@@ -106,26 +102,6 @@ public class Student {
     public String getFullName() {return firstName + " " + lastName;}
 
     //TODO: Write a record replacement method in case of inaccuracies
-}
-
-class AttendanceRecord {
-    //TODO: How do we know what class the student was present/absent for?
-    private Date timestamp;
-    boolean present, lateArrival, earlyDeparture;
-
-    AttendanceRecord(boolean present, boolean lateArrival, boolean earlyDeparture) {
-        this.present = present;
-        this.lateArrival = lateArrival;
-        this.earlyDeparture = earlyDeparture;
-        this.timestamp = new Date();
-    }
-
-    AttendanceRecord(Date timestamp, boolean present, boolean lateArrival, boolean earlyDeparture) {
-        this.timestamp = timestamp;
-        this.present = present;
-        this.lateArrival = lateArrival;
-        this.earlyDeparture = earlyDeparture;
-    }
 }
 
 class AttendanceSummary {
