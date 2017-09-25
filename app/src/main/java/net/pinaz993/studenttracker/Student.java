@@ -1,12 +1,6 @@
 package net.pinaz993.studenttracker;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-
 import io.paperdb.Paper;
 
-import static android.provider.Settings.Global.getString;
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
@@ -20,7 +14,6 @@ public class Student {
     private final String email;
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
-    private ArrayList<AttendanceRecord> attendanceRecords;
 
     public static Student retrieve(String studentID) {
         return Paper.book(BOOK_ID).read(studentID);
@@ -39,7 +32,6 @@ public class Student {
         this.lastName = lastName;
         this.email = email;
         this.studentID = studentID;
-        this.attendanceRecords = new ArrayList<>();
     }
 
     /**
@@ -54,13 +46,11 @@ public class Student {
         this.lastName = lastName;
         this.studentID = studentID;
         this.email = null;
-        this.attendanceRecords = new ArrayList<>();
     }
     /**
      * Takes attendance data and records it in storage
-     *
-     */
     public void recordAttendance(){
+            //TODO: Replace with SQL implementation, because querying
     }
 
     public void compileAttendanceSummary(){
@@ -71,7 +61,13 @@ public class Student {
 
     public boolean isDelinquent() { return delinquent; }
 
+
     public void setDelinquent(boolean delinquent) { this.delinquent = delinquent; }
+
+    public boolean isDelinquent() {return delinquent;}
+
+    public void setDelinquent(boolean delinquent) {this.delinquent = delinquent;}
+
 
     public void save() {
         Paper.book(BOOK_ID).write(studentID, this);
@@ -87,5 +83,16 @@ public class Student {
 
     public String getFullName() {return firstName + " " + lastName;}
 
+
     //TODO: Write a record replacement method in case of inaccuracies
+}
+
+
+class AttendanceSummary {
+    int daysAbsent;
+    int daysPresent;
+    int lateArrivals;
+    int earlyDepartures;
+
+    AttendanceSummary() {}
 }
