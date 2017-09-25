@@ -21,7 +21,6 @@ public class Student {
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
     private ArrayList<AttendanceRecord> attendanceRecords;
-    private transient AttendanceSummary summary;
 
     public static Student retrieve(String studentID) {
         return Paper.book(BOOK_ID).read(studentID);
@@ -41,7 +40,6 @@ public class Student {
         this.email = email;
         this.studentID = studentID;
         this.attendanceRecords = new ArrayList<>();
-        this.summary = null;
     }
 
     /**
@@ -57,30 +55,18 @@ public class Student {
         this.studentID = studentID;
         this.email = null;
         this.attendanceRecords = new ArrayList<>();
-        this.summary = null;
     }
     /**
      * Takes attendance data and records it in storage
-     * @param present If the student was there at all
-     * @param lateArrival If the student arrived late to class
-     * @param earlyDeparture If the student left class early
+     *
      */
     public void recordAttendance(){
-        //TODO: Replace with S
-    }
-
-    public void recordDatedAttendance(boolean present, boolean lateArrival, boolean earlyDeparture,
-                                      Date timestamp, String classID) {
-        AttendanceRecord record = new AttendanceRecord(timestamp, present, lateArrival,
-                                                       earlyDeparture);
-        this.attendanceRecords.add(record);
     }
 
     public void compileAttendanceSummary(){
         /*
          * This is a method because we don't wish to perform each time student object is created.
          */
-        this.summary = new AttendanceSummary(this.attendanceRecords);
     }
 
     public boolean isDelinquent() { return delinquent; }
@@ -102,23 +88,4 @@ public class Student {
     public String getFullName() {return firstName + " " + lastName;}
 
     //TODO: Write a record replacement method in case of inaccuracies
-}
-
-class AttendanceSummary {
-    int daysAbsent;
-    int daysPresent;
-    int lateArrivals;
-    int earlyDepartures;
-
-    AttendanceSummary(ArrayList<AttendanceRecord> attendanceRecords){
-        Iterator<AttendanceRecord> I = attendanceRecords.listIterator();
-        AttendanceRecord currentRecord;
-        while(I.hasNext()) {
-            currentRecord = I.next();
-            if(currentRecord.present) daysPresent++;
-            else daysAbsent++;
-            if(currentRecord.lateArrival) lateArrivals++;
-            if(currentRecord.earlyDeparture) earlyDepartures++;
-        }
-    }
 }
