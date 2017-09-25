@@ -18,6 +18,8 @@
         android:layoutDirection="rtl"
         android:orientation="horizontal">
 
+        <!--TODO: Make these buttons conform to Material guidelines-->
+
         <ToggleButton
             android:id="@+id/excusedBtn"
             android:theme="@style/AppTheme"
