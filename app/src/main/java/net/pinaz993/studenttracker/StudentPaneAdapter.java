@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -36,16 +38,17 @@ public class StudentPaneAdapter extends ArrayAdapter {
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
 
-    public StudentPaneAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull Object[] objects) {
-        super(context, resource, objects);
+    public StudentPaneAdapter(@NonNull Context context, @NonNull Object[] objects) {
+        super(context, R.layout.student_pane_template, objects);
         inflater = LayoutInflater.from(getContext());
         binderHelper = new ViewBinderHelper();
         binderHelper.setOpenOnlyOne(true);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        final ViewHolder holder;
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.student_pane_template, parent, false);
 
@@ -70,9 +73,28 @@ public class StudentPaneAdapter extends ArrayAdapter {
         if(student != null) {
             binderHelper.bind(holder.swipe, student.getStudentID());
         }
+            //Set click handlers
+        holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                toggleExcused(holder.excusedBtn.isChecked(), student);}});
 
+        holder.earlyDepartureBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                toggleEarlyDeparture(holder.earlyDepartureBtn.isChecked(), student);}});
 
+        holder.lateArrivalBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                toggleLateArrival(holder.lateArrivalBtn.isChecked(), student);}});
 
+        holder.absentPresentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                toggleAbsentPresent(holder.absentPresentSwitch.isChecked(), student);}});
+
+        holder.studentNameTxt.setText(student.getFullName());
 
 
 
@@ -80,13 +102,13 @@ public class StudentPaneAdapter extends ArrayAdapter {
     }
 
 
-    private void toggleAbsentPresent(SwitchCompat switchCompat, Student student) {}
+    private void toggleAbsentPresent(boolean isChecked, Student student) {}
 
-    private void toggleLateArrival(ToggleButton toggleButton, Student student) {}
+    private void toggleLateArrival(boolean isChecked, Student student) {}
 
-    private void toggleEarlyDeparture(ToggleButton toggleButton, Student student) {}
+    private void toggleEarlyDeparture(boolean isChecked, Student student) {}
 
-    private void toggleExcused(ToggleButton toggleButton, Student student) {}
+    private void toggleExcused(boolean isChecked, Student student) {}
 
     private class ViewHolder {
         LinearLayout bottomLayout;
@@ -96,7 +118,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
         LinearLayout topLayout;
         TextView studentNameTxt;
-        SwitchCompat absentPresentSwitch;
+        Switch absentPresentSwitch;
 
         SwipeRevealLayout swipe;
     }

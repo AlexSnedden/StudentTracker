@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <!--Straight Red-->
-    <item
-        android:color="#ff0000"
-        android:state_enabled="true"/>
-
     <!--Straight Green-->
     <item
-        android:color="#00ff00"
+        android:color="#22bb22"
         android:state_checked= "true" />
+
+    <!--Straight Red-->
+    <item
+        android:color="#cc0000"
+        android:state_enabled="true"/>
 </selector>
 

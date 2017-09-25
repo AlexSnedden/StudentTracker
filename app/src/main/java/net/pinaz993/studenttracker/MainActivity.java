@@ -1,15 +1,17 @@
 package net.pinaz993.studenttracker;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import io.paperdb.Paper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,12 +21,10 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout mainLayout = (ConstraintLayout)findViewById(R.id.mainLayout);
 
         Student bob = new Student("Bobert", "Roberts", "12345");
-        Log.d("", "onCreate: created student");
-        StudentPaneAdapter bobpane = new StudentPaneAdapter(getApplicationContext(), bob);
-        Log.d("", "onCreate: created student pane");
-        mainLayout.addView(bobpane);
-
-
+        Student[] students = generateStudents(10);
+        StudentPaneAdapter testList = new StudentPaneAdapter(getApplicationContext(), students);
+        ListView list = (ListView)findViewById(R.id.list);
+        list.setAdapter(testList);
 
     }
     /* temporary function to test ui with students objects */
@@ -33,6 +33,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i < numStudents; i++) {
             students.add(new Student("Richie", "Rich", String.valueOf(i), "richierich@gmail.com"));
         }
-        return (Student[])students.toArray();
+        return students.toArray(new Student[students.size()]);
     }
 }
