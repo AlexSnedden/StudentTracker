@@ -12,9 +12,8 @@ public class Student {
     private final String firstName;
     private final String lastName;
     private final String email;
-    final String studentID;
+    private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
-    private transient AttendanceSummary summary;
 
     public static Student retrieve(String studentID) {
         return Paper.book(BOOK_ID).read(studentID);
@@ -33,7 +32,6 @@ public class Student {
         this.lastName = lastName;
         this.email = email;
         this.studentID = studentID;
-        this.summary = null;
     }
 
     /**
@@ -48,13 +46,9 @@ public class Student {
         this.lastName = lastName;
         this.studentID = studentID;
         this.email = null;
-        this.summary = null;
     }
-
-
     /**
      * Takes attendance data and records it in storage
-     */
     public void recordAttendance(){
             //TODO: Replace with SQL implementation, because querying
     }
@@ -63,13 +57,17 @@ public class Student {
         /*
          * This is a method because we don't wish to perform each time student object is created.
          */
-        this.summary = new AttendanceSummary();
     }
 
+    public boolean isDelinquent() { return delinquent; }
+
+
+    public void setDelinquent(boolean delinquent) { this.delinquent = delinquent; }
 
     public boolean isDelinquent() {return delinquent;}
 
     public void setDelinquent(boolean delinquent) {this.delinquent = delinquent;}
+
 
     public void save() {
         Paper.book(BOOK_ID).write(studentID, this);
@@ -84,6 +82,9 @@ public class Student {
     public String getStudentID() {return studentID;}
 
     public String getFullName() {return firstName + " " + lastName;}
+
+
+    //TODO: Write a record replacement method in case of inaccuracies
 }
 
 

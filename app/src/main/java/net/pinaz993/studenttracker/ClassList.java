@@ -41,7 +41,7 @@ public class ClassList {
 
     public void addStudent(Student student) {
         students.add(student);
-        studentIDs.add(student.studentID);
+        studentIDs.add(student.getStudentID());
     }
 
     public void removeStudent(Student student) {
@@ -90,7 +90,7 @@ public class ClassList {
         Student student;
         while(studentsIterator.hasNext()) {
             student = studentsIterator.next();
-            studentIDs.add(student.studentID);
+            studentIDs.add(student.getStudentID());
             student.save();
         }
         // ensure student pointer is null as well as pointer to array list of students, then
