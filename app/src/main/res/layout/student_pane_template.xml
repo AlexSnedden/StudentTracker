@@ -11,28 +11,25 @@
     <!--Bottom Layout-->
     <LinearLayout
         android:id="@+id/bottomLayout"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="right|center_vertical"
         android:layoutDirection="rtl"
-        android:orientation="horizontal"
-        android:theme="@style/AppTheme">
+        android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/excusedBtn"
+            android:theme="@style/AppTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
             android:textOff="@string/excusedTxt"
-            android:textOn="@string/excusedTxt" />
+            android:textOn="@string/excusedTxt"/>
 
         <ToggleButton
             android:id="@+id/earlyDepartureBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
             android:textOff="@string/earlyDepartureTxt"
             android:textOn="@string/earlyDepartureTxt" />
 
@@ -40,8 +37,6 @@
             android:id="@+id/lateArrivalBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
             android:textOff="@string/lateArrivalTxt"
             android:textOn="@string/lateArrivalTxt" />
     </LinearLayout>
