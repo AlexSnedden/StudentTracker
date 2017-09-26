@@ -36,6 +36,7 @@ public class Student {
         return Paper.book(BOOK_ID).read(studentID);
     }
 
+    //<editor-fold desc="Constructors">
     /**
      * Constructor with email address
      * @param firstName First name of student
@@ -64,11 +65,12 @@ public class Student {
         this.studentID = studentID;
         this.email = null;
     }
+    //</editor-fold>
 
     /**
      * Record attendance with the following values:
      * @param classID The class the student was to attend
-     * @param timestamp The time and date of attendance. Can be null, will be set to now()
+     * @param interval The time and date of attendance. Can be null, will be set to the current one
      * @param present Was the student present?
      * @param lateArrival Did the student arrive late?
      * @param earlyDeparture Did the student leave class early?
@@ -76,7 +78,7 @@ public class Student {
      *
      * Can also be used to record attendance after the fact.
      */
-    public void recordAttendence(String classID, @Nullable Timestamp timestamp,
+    public void recordAttendence(String classID, @Nullable AttendanceInterval interval,
                                  boolean present, boolean lateArrival,
                                  boolean earlyDeparture, boolean excused) {
         //TODO: Implement Student.recordAttendance()
@@ -86,21 +88,21 @@ public class Student {
 
         //If present is false, late arrival and early departure are automatically false
 
-        //Store it.
+        //Store it, using AttendanceInterval.getStart() in the timestamp column
 
     }
 
     /**
      * Change a specified record of attendance. Specified by the following:
      * @param classID The class the student was to attend
-     * @param timestamp The time and date of attendance.  Cannot be null
+     * @param interval Attendance interval in question.  Cannot be null
      * Changes the following values in the record:
      * @param present Was the student present?
      * @param lateArrival Did the student arrive late?
      * @param earlyDeparture Did the student leave class early?
      * @param excused Was the behavior excused?
      */
-    public void changeAttendance(String classID, Timestamp timestamp,
+    public void changeAttendance(String classID, AttendanceInterval interval,
                                  boolean present, @Nullable boolean lateArrival,
                                  @Nullable boolean earlyDeparture, @Nullable boolean excused) {
         //TODO: Implement Student.changeAttendance()
@@ -125,15 +127,66 @@ public class Student {
                                        boolean earlyDeparture, boolean excused) {
         //TODO: Implement Student.changeRecentAttendance()
 
-        //Find the record (there should only be one) within the last attendance period, and change
+        //Find the record (there should only be one) within the last attendance interval, and change
         //it. The attendance period is defined elsewhere, with a default of one day.
 
     }
 
+    /**
+     * Deletes the record that matches the record defined by the following:
+     * @param classID The class the student was to attend
+     * @param interval The time and date of attendance.
+     */
+    public void deleteRecord(String classID, AttendanceInterval interval) {
+        // TODO: Implement Student.deleteRecord()
 
+        //Find the record that matches this one and delete it. If there isn't one, do nothing.
+    }
 
+    /**
+     * Deletes all record for this student, possibly for this student and a given class
+     * @param classID The class the student was to attend
+     */
+    public void resetAttendance(@Nullable String classID) {
+        //TODO: Implement Student.resetAttendance()
+
+        if(classID != null) {
+            //delete all records for this student and that class ID.
+        } else {
+            //delete all attendance records for this student... period.
+        }
+    }
+
+    /**
+     * Queries the database to see if a record exists for this student, classID and attendance
+     * interval.
+     * @param classID the class the student was to attend
+     * @param interval the attendance interval when the student was to attend the class
+     * @return Does the record exist?
+     */
+    public boolean recordExists(String classID, AttendanceInterval interval){
+        //TODO: Implement Student.RecordExists
+
+        //Query the database to find a record for this student with this class id and in that
+        //attendance interval
+        return false;
+    }
+
+    /**
+     * Saves the student to disk using Paper. Anything that shouldn't be saved needs to be marked
+     * as transient, such as an attendance summery.
+     */
     public void save() {
         Paper.book(BOOK_ID).write(studentID, this);
+    }
+
+    public AttendanceSummary compileSummery() {
+        //TODO: Implement Student.compileSummery()
+
+        //query the database gathering all records for the student.
+        //add up all days absent, days present, late arrivals, and early departures.
+        //for each category, note the number of these that are excused
+        return null;
     }
 
     //<editor-fold desc="Setters and Getters">
@@ -157,11 +210,52 @@ public class Student {
      * TODO: Integrate with SQL Implementation of attendance records
      */
     private class AttendanceSummary {
-        int daysAbsent;
+        int totalRecords, Absences, excusedAbsenses;
         int daysPresent;
         int lateArrivals;
+        int excusedLateArrivals;
         int earlyDepartures;
+        int excusedEarlyDepartures;
+    }
 
-        AttendanceSummary() {}
+
+    /**
+     * An object for storing an interval of attendance. Could be as little as an hour, could be
+     * as much as a week. No real limits, other than precision. This is used to make sure that there
+     * are never two records for the same attendance interval, classID and studentID in the
+     * database. A global setting determinnes the length of the attendance interval, which is 24h,
+     * by default.
+     */
+    private class AttendanceInterval{
+        private final Timestamp start, end;
+
+        public AttendanceInterval(Timestamp start, Timestamp end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public AttendanceInterval(Timestamp start) {
+            //TODO: Implement 'null end' constructor for AttendanceInterval
+            this.start = start;
+            //Grab the interval setting and use it to calculate the end of the interval
+            this.end = null;
+        }
+
+        public boolean isInInterval(Timestamp test) {
+            //TODO Implement AttendanceInterval.isInInterval()
+
+            //Check to see if 'test' is in the range of 'start' to 'end'
+            return false;
+        }
+
+        //<editor-fold desc="Getters">
+        public Timestamp getStart() {
+            return start;
+        }
+
+        public Timestamp getEnd() {
+            return end;
+        }
+        //</editor-fold>
     }
 }
