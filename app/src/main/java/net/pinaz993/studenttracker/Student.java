@@ -57,12 +57,6 @@ public class Student {
         /*
          * This is a method because we don't wish to perform each time student object is created.
          */
-    }
-
-    public boolean isDelinquent() { return delinquent; }
-
-
-    public void setDelinquent(boolean delinquent) { this.delinquent = delinquent; }
 
     public boolean isDelinquent() {return delinquent;}
 
