@@ -192,7 +192,7 @@ public class Student {
     //</editor-fold>
 
 
-    //<editor-fold desc="Behavior Record Handling">
+    //<editor-fold desc="BehaviorHandler Record Handling">
     /**
      * Record a notable instance of a behavior with the following information:
      * @param classID the ID of the class in which the behavior was observed
