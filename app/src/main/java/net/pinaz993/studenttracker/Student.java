@@ -32,6 +32,7 @@ public class Student {
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
 
+
     public static Student retrieve(String studentID) {
         return Paper.book(BOOK_ID).read(studentID);
     }
@@ -67,6 +68,7 @@ public class Student {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Attendance Record Handling">
     /**
      * Record attendance with the following values:
      * @param classID The class the student was to attend
@@ -129,7 +131,6 @@ public class Student {
 
         //Find the record (there should only be one) within the last attendance interval, and change
         //it. The attendance period is defined elsewhere, with a default of one day.
-
     }
 
     /**
@@ -137,7 +138,7 @@ public class Student {
      * @param classID The class the student was to attend
      * @param interval The time and date of attendance.
      */
-    public void deleteRecord(String classID, AttendanceInterval interval) {
+    public void deleteAttendanceRecord(String classID, AttendanceInterval interval) {
         // TODO: Implement Student.deleteRecord()
 
         //Find the record that matches this one and delete it. If there isn't one, do nothing.
@@ -164,7 +165,7 @@ public class Student {
      * @param interval the attendance interval when the student was to attend the class
      * @return Does the record exist?
      */
-    public boolean recordExists(String classID, AttendanceInterval interval){
+    public boolean attendanceRecordExists(String classID, AttendanceInterval interval){
         //TODO: Implement Student.RecordExists
 
         //Query the database to find a record for this student with this class id and in that
@@ -180,14 +181,40 @@ public class Student {
         Paper.book(BOOK_ID).write(studentID, this);
     }
 
-    public AttendanceSummary compileSummery() {
-        //TODO: Implement Student.compileSummery()
+    public AttendanceSummary compileAttendanceSummery() {
+        //TODO: Implement Student.compileAttendanceSummery()
 
         //query the database gathering all records for the student.
         //add up all days absent, days present, late arrivals, and early departures.
         //for each category, note the number of these that are excused
         return null;
     }
+    //</editor-fold>
+
+
+    //<editor-fold desc="Behavior Record Handling">
+    /**
+     * Record a notable instance of a behavior with the following information:
+     * @param classID the ID of the class in which the behavior was observed
+     * @param behaviorID the ID of the behavior that is observed
+     * @param timestamp the time and date of the observed behavior
+     * This behavior is not determined within the student object. It is determined by the app itself
+     * the object simply records what it is given.
+     */
+    public void recordBehavior(String classID, int behaviorID, Timestamp timestamp){
+        //TODO: Implement Student.recordBehavior()
+    }
+
+    /**
+     * Deletes a behavior record from the database using the following information:
+     * @param classID the ID of the class on which the behavior was observed
+     * @param behaviorID the ID of the behavior that is observed
+     * @param timestamp the time and date of the observed behavior
+     */
+    public void deleteBehaviorRecord(String classID, int behaviorID, Timestamp timestamp){
+        //TODO:Implement Student.deleteBehaviorRecord()
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Setters and Getters">
     public boolean isDelinquent() {return delinquent;}

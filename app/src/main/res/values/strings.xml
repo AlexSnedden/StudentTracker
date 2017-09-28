@@ -28,4 +28,7 @@
     <string name="earlyDepartureTxt">Early\nDeparture</string>
     <string name="invalidStudentTxt">Invalid Student</string>
     <string name="excusedTxt">Excused</string>
+    <string name="behaviorNegative">Negative</string>
+    <string name="behaviorNeutral">Neutral</string>
+    <string name="behaviorPositive">Positive</string>
 </resources>
