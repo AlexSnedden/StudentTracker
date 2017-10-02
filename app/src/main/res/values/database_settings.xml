@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="databaseName">StudentTracking.db</string>
+
+    <!--Schema-->
+        <!--Table: behaviorRecords-->
+        <string name="behaviorRecordsTableName">behaviorRecords</string>
+        <string-array name="behaviorRecordsColumns">
+            <item>behaviorID INTEGER NOT NULL,</item>
+            <item>studentID TEXT NOT NULL,</item>
+            <!--Included because it might be useful to know if a student has different behaviors different classes-->
+            <item>classID TEXT NOT NULL,</item>
+            <!--use System.currentTimeMillis() or something similar to get milliseconds since... IDK-->
+            <item>timestamp INTEGER NOT NULL,</item>
+            <!--Compound primary key of all three fields, to make sure each record is unique-->
+            <item>PRIMARY KEY (behaviorID, studentID, timestamp),</item>
+            <item>FOREIGN KEY (behaviorID) REFERENCES behaviorAlias(behaviorID);</item>
+        </string-array>
+
+        <!--Table: BehaviorAlias-->
+        <string name="behaviorAliasTableName">behaviorAlias</string>
+        <string-array name="behaviorAliasColumns">
+            <item>behaviorID INTEGER PRIMARY KEY,</item>
+            <item>behaviorName TEXT,</item>
+            <!--Integer with default of zero, and possible values of -1, 0, and 1.-->
+            <item>positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1, 0, 1));</item>
+        </string-array>
+
+        <!--Table: attendanceRecords-->
+        <string name="attendanceRecordsTableName">attendanceRecords</string>
+        <string-array name="attendanceRecordsColumns">
+            <item>studentID TEXT NOT NULL,</item>
+            <item>classID TEXT NOT NULL,</item>
+            <!--use System.currentTimeMillis() or something similar to get milliseconds since... IDK-->
+            <item>timestamp INTEGER NOT NULL</item>
+            <!--bool-->
+            <item>present INTEGER NOT NULL CHECK(present IN(0, 1)),</item>
+            <!--boole-->
+            <item>lateArrival INTEGER NOT NULL CHECK(lateArrival IN(0, 1) AND present IS 1),</item>
+            <!--boolea-->
+            <item>earlyDeparture INTEGER NOT NULL CHECK(earlyDeparture IN(0, 1) AND present IS 1),</item>
+            <!--boolean-->
+            <item>excused INTEGER NOT NULL CHECK(excused IN(0, 1));</item>
+            <item>PRIMARY KEY(studentID, classID, timestamp)</item>
+        </string-array>
+
+</resources>
