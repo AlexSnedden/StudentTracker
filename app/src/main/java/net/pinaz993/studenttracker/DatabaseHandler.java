@@ -1,8 +1,12 @@
 package net.pinaz993.studenttracker;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
-import android.database.sqlite.*;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
+
 /**
  * Handles all database operations for the app.
  * Created by Patrick Shannon on 10/3/2017.
@@ -10,26 +14,78 @@ import android.database.sqlite.*;
 
 public class DatabaseHandler extends SQLiteOpenHelper{
 
-    private static final String databaseName = "StudentTracking"
+    public static final String DATABASE_NAME = "StudentTracking";
+    public static final int DATABASE_VERSION = 1; //See this.onUpgrade
 
-    public DatabaseHandler(Context context, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, databaseName, factory, version);
+    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
+        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
-    public DatabaseHandler(Context context, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
-        super(context, databaseName, factory, version, errorHandler);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
+        super(context, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(createBehaviorRecordTable);
+        db.execSQL(createBehaviorAliasTable);
+        db.execSQL(createAttendanceRecordsTable);
     }
 
+    /**
+     * Completely resets the database to factory defaults
+     * @param db The database to reset
+     */
+    public void resetDatabase(SQLiteDatabase db){
+        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if(c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                String name = c.getString(c.getColumnIndex("name"));
+                db.execSQL("DROP TABLE IF EXISTS" + name);
+            }
+        }
+        c.close();
+        onCreate(db);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        // This method is used to change the database around if ever the Schema is changed.
+        // If you change the schema, you MUST update the version number. If there's something that
+        // needs to be done when an old database is updated to reflect the new schema, this is where
+        // you put it.
+        // Right now, there is nothing that needs done, so it sits empty.
+    }
+
+    //<editor-fold desc="Strings for Creating Tables">
+    private String createBehaviorRecordTable = "CREATE TABLE " +
+            BehaviorRecordTableSchema.name + " (" +
+            BehaviorRecordTableSchema.behaviorIdColDef +
+            BehaviorRecordTableSchema.studentIdColDef +
+            BehaviorRecordTableSchema.classIdColDef +
+            BehaviorRecordTableSchema.timestampColDef +
+            BehaviorRecordTableSchema.primaryKeyDef+
+            BehaviorRecordTableSchema.behaviorIdAliasDef + ")";
+
+    private String createBehaviorAliasTable = "CREATE TABLE " +
+            BehaviorAliasTableSchema.name + " (" +
+            BehaviorAliasTableSchema.behaviorIdColDef +
+            BehaviorAliasTableSchema.behaviorNameColDef +
+            BehaviorAliasTableSchema.positivityColDef + " )";
+
+    private String createAttendanceRecordsTable = "CREATE TABLE " +
+            AttendanceRecordsTableSchema.name + " (" +
+            AttendanceRecordsTableSchema.studentIdColDef +
+            AttendanceRecordsTableSchema.classIdColDef +
+            AttendanceRecordsTableSchema.timestampColDef +
+            AttendanceRecordsTableSchema.presentColDef +
+            AttendanceRecordsTableSchema.lateArrivalColDef +
+            AttendanceRecordsTableSchema.earlyDepartureColDef +
+            AttendanceRecordsTableSchema.excusedColDef +
+            AttendanceRecordsTableSchema.primaryKeyDef + ")";
+    //</editor-fold>
+
+    //<editor-fold desc="Schema Classes">
     private static class BehaviorRecordTableSchema{
         public static final String name = "BehaviorRecords";
 
@@ -78,19 +134,5 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String earlyDepartureCol = "earlyDeparture";
         public static final String excusedCol = "excused";
     }
-
-    private String createBehaviorRecordTable = "CREATE TABLE " +
-            BehaviorRecordTableSchema.name + " (" +
-            BehaviorRecordTableSchema.behaviorIdColDef +
-            BehaviorRecordTableSchema.studentIdColDef +
-            BehaviorRecordTableSchema.classIdColDef +
-            BehaviorRecordTableSchema.timestampColDef +
-            BehaviorRecordTableSchema.primaryKeyDef+
-            BehaviorRecordTableSchema.behaviorIdAliasDef + ")";
-
-    private String createBehaviorAliasTable = "CREATE TABLE " +
-            BehaviorAliasTableSchema.name + " (" +
-            BehaviorAliasTableSchema.behaviorIdColDef +
-            BehaviorAliasTableSchema.behaviorNameColDef +
-            BehaviorAliasTableSchema.positivityColDef + " )"
+    //</editor-fold>
 }
