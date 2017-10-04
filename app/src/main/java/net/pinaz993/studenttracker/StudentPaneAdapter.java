@@ -49,7 +49,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final ViewHolder holder;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.student_pane_template, parent, false);
 
             holder = new ViewHolder();
@@ -66,37 +66,44 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        final Student student = (Student)getItem(position);
-        if(student != null) {
+        final Student student = (Student) getItem(position);
+        if (student != null) {
             binderHelper.bind(holder.swipe, student.getStudentID());
-        }
             //Set click handlers
-        holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                toggleExcused(holder.excusedBtn.isChecked(), student);}});
+            holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    toggleExcused(holder.excusedBtn.isChecked(), student);
+                }
+            });
 
-        holder.earlyDepartureBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                toggleEarlyDeparture(holder.earlyDepartureBtn.isChecked(), student);}});
+            holder.earlyDepartureBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    toggleEarlyDeparture(holder.earlyDepartureBtn.isChecked(), student);
+                }
+            });
 
-        holder.lateArrivalBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                toggleLateArrival(holder.lateArrivalBtn.isChecked(), student);}});
+            holder.lateArrivalBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    toggleLateArrival(holder.lateArrivalBtn.isChecked(), student);
+                }
+            });
 
-        holder.absentPresentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                toggleAbsentPresent(holder.absentPresentSwitch.isChecked(), student);}});
+            holder.absentPresentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    toggleAbsentPresent(holder.absentPresentSwitch.isChecked(), student);
+                }
+            });
 
-        holder.studentNameTxt.setText(student.getFullName());
-
-
+            holder.studentNameTxt.setText(student.getFullName());
+        }
+        else throw new NullPointerException("Tried to bind non-existent student to view");
 
         return convertView;
     }
