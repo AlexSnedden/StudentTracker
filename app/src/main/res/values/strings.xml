@@ -23,13 +23,12 @@
         <item>No Effort Shown</item>
         <item>Arrogant</item>
     </string-array>
-    <string-array name="attendanceChoices">
-        <item>Present</item>
-        <item>Absent</item>
-    </string-array>
-    <string-array name="punctualityChoices">
-        <item>On Time</item>
-        <item>Tardy</item>
-        <item>Left Early</item>
-    </string-array>
+
+    <string name="lateArrivalTxt">Late\nArrival</string>
+    <string name="earlyDepartureTxt">Early\nDeparture</string>
+    <string name="invalidStudentTxt">Invalid Student</string>
+    <string name="excusedTxt">Excused</string>
+    <string name="behaviorNegative">Negative</string>
+    <string name="behaviorNeutral">Neutral</string>
+    <string name="behaviorPositive">Positive</string>
 </resources>

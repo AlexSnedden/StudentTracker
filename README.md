@@ -1,1 +1,1 @@
-Possible data storage solution: Paper by pilgr
+Need to comply iwth Material design guidelines. That includes all UI elements.
