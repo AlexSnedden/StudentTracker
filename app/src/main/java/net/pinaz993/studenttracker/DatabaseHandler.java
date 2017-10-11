@@ -284,5 +284,19 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";
     }
+
+    private static class StudentTableSchema{
+        public static final String NAME = "Students";
+
+        public static final String STUDENT_ID_COL_DEF = "studentID TEXT PRIMARY KEY,";
+        public static final String FIRST_NAME_COL_DEF = "firstName TEXT NOT NULL,";
+        public static final String LAST_NAME_COL_DEF = "lastName TEXT NOT NULL,";
+        public static final String EMAIL_COL_DEF = "email TEXT";
+
+        public static final String STUDENT_ID_COL = "studentID";
+        public static final String FIRST_NAME_COL = "firstName";
+        public static final String LAST_NAME_COL = "lastName";
+        public static final String EMAIL_COL = "email";
+    }
     //</editor-fold>
 }
