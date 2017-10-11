@@ -25,7 +25,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
     private SQLiteDatabase db;
     private Context context;
-    private SharedPreferences pref;
+    private SharedPreferences attendanceIntervalPref;
     private AsyncTask task;
 
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
@@ -41,8 +41,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public void init() {
-        pref = context.getSharedPreferences(
-                Resources.getSystem().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        attendanceIntervalPref = context.getSharedPreferences(
+                Resources.getSystem().getString(R.string.attendance_interval_key), Context.MODE_PRIVATE);
 
     }
 
@@ -120,7 +120,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         c.close();
         onCreate(db);
     }
-
 
     //<editor-fold desc="Attendance Record Handling">
     /**
