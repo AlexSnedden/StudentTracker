@@ -1,19 +1,12 @@
 package net.pinaz993.studenttracker;
 
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class ClassListActivity extends AppCompatActivity {
 
@@ -37,9 +30,8 @@ public class ClassListActivity extends AppCompatActivity {
         }
         ClassList studentList = new ClassList(studentData);
         StudentPaneAdapter studentPaneList = new StudentPaneAdapter(getApplicationContext(),
-                                                                    studentList.getStudentList());
+                studentList.getStudentList());
         ListView list = (ListView)findViewById(R.id.list);
         list.setAdapter(studentPaneList);
-
     }
 }

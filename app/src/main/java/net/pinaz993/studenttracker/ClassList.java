@@ -2,11 +2,16 @@ package net.pinaz993.studenttracker;
 
 import android.util.Log;
 
+import com.opencsv.CSVReader;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
@@ -27,8 +32,9 @@ public class ClassList {
     private final String JSON_EMAIL = "email";
     private final String JSON_ID = "ID";
 
-    public ClassList(JSONObject studentRecords) {
+    public ClassList(String studentRecords) {
         //TODO: implement email handling
+        /*
         JSONArray studentArray = null;
         JSONObject student = null;
 
@@ -51,6 +57,18 @@ public class ClassList {
             } catch(JSONException e) {
                 e.printStackTrace();
             }
+        }
+        */
+        CSVReader csvReader = new CSVReader(new StringReader(studentRecords));
+        List<String[]> csvStudents = null;
+        try {
+            studentList = csvReader.readAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        studentList = new Student[csvStudents.size()];
+        for(int i=0; i < studentList.length; i++) {
+            
         }
     }
 

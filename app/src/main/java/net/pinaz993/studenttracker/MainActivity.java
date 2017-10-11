@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
+
         startActivity(redirect);
     }
 }
