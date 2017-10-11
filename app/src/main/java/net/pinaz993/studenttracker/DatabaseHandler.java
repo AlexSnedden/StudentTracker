@@ -2,8 +2,6 @@ package net.pinaz993.studenttracker;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,7 +24,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private SQLiteDatabase db;
     private Context context;
     private AsyncTask task;
-    private long attendanceIntervalLength;// Number of milliseconds in interval
 
     //<editor-fold desc="Constructors and init()">
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
@@ -71,31 +68,37 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createBehaviorRecordTable = "CREATE TABLE " +
-                BehaviorRecordTableSchema.name + " (" +
-                BehaviorRecordTableSchema.behaviorIdColDef +
-                BehaviorRecordTableSchema.studentIdColDef +
-                BehaviorRecordTableSchema.classIdColDef +
-                BehaviorRecordTableSchema.timestampColDef +
-                BehaviorRecordTableSchema.primaryKeyDef +
-                BehaviorRecordTableSchema.behaviorIdAliasDef + ")";
+                BehaviorRecordTableSchema.NAME + " (" +
+                BehaviorRecordTableSchema.BEHAVIOR_ID_COL_DEF +
+                BehaviorRecordTableSchema.STUDENT_ID_COL_DEF +
+                BehaviorRecordTableSchema.CLASS_ID_COL_DEF +
+                BehaviorRecordTableSchema.TIMESTAMP_COL_DEF +
+                BehaviorRecordTableSchema.PRIMARY_KEY_DEF +
+                BehaviorRecordTableSchema.BEHAVIOR_ID_ALIAS_DEF + ")";
         db.execSQL(createBehaviorRecordTable);
         String createBehaviorAliasTable = "CREATE TABLE " +
-                BehaviorAliasTableSchema.name + " (" +
-                BehaviorAliasTableSchema.behaviorIdColDef +
-                BehaviorAliasTableSchema.behaviorNameColDef +
-                BehaviorAliasTableSchema.positivityColDef + " )";
+                BehaviorAliasTableSchema.NAME + " (" +
+                BehaviorAliasTableSchema.BEHAVIOR_ID_COL_DEF +
+                BehaviorAliasTableSchema.BEHAVIOR_NAME_COL_DEF +
+                BehaviorAliasTableSchema.POSITIVITY_COL_DEF + " )";
         db.execSQL(createBehaviorAliasTable);
         String createAttendanceRecordsTable = "CREATE TABLE " +
-                AttendanceRecordsTableSchema.name + " (" +
-                AttendanceRecordsTableSchema.studentIdColDef +
-                AttendanceRecordsTableSchema.classIdColDef +
-                AttendanceRecordsTableSchema.periodColDef +
-                AttendanceRecordsTableSchema.presentColDef +
-                AttendanceRecordsTableSchema.lateArrivalColDef +
-                AttendanceRecordsTableSchema.earlyDepartureColDef +
-                AttendanceRecordsTableSchema.excusedColDef +
-                AttendanceRecordsTableSchema.primaryKeyDef + ")";
+                AttendanceRecordsTableSchema.NAME + " (" +
+                AttendanceRecordsTableSchema.STUDENT_ID_COL_DEF +
+                AttendanceRecordsTableSchema.CLASS_ID_COL_DEF +
+                AttendanceRecordsTableSchema.INTERVAL_COL_DEF +
+                AttendanceRecordsTableSchema.PRESENT_COL_DEF +
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL_DEF +
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL_DEF +
+                AttendanceRecordsTableSchema.EXCUSED_COL_DEF +
+                AttendanceRecordsTableSchema.PRIMARY_KEY_DEF + ")";
         db.execSQL(createAttendanceRecordsTable);
+        String createStudentClassMappingTable = "CREATE TABLE " +
+                StudentClassMappingTableSchema.NAME + " (" +
+                StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
+                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF +
+                StudentClassMappingTableSchema.PRIMARY_KEY_DEF +")";
+        db.execSQL(createStudentClassMappingTable);
     }
 
     @Override
@@ -124,18 +127,16 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     //<editor-fold desc="Attendance Record Handling">
     /**
-     * Grabs all attendance records from the current attendance period.
+     * Grabs all attendance records from the current attendance interval.
      * @param classID The class for which to grab the attendance record
      * @return a Cursor containing all the records collected
      */
     public Cursor getCurrentAttendanceRecords(String classID){
-        int period = 0; //Set to beginning of current attendance interval
-        //TODO: Implement attendance period using SharedPreferences
-        String query = "SELECT * FROM " + AttendanceRecordsTableSchema.name +
-                "WHERE " + AttendanceRecordsTableSchema.periodCol + " IS " +
-                period + " AND " + AttendanceRecordsTableSchema.classIdCol +
+        long period = AttendanceInterval.getCurrentStart();
+        String query = "SELECT * FROM " + AttendanceRecordsTableSchema.NAME +
+                "WHERE " + AttendanceRecordsTableSchema.INTERVAL_COL + " IS " +
+                period + " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL +
                 " IS " + classID;
-
         return db.rawQuery(query, null);
     }
 
@@ -144,14 +145,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * @return Cursor containing all matching records
      */
     public Cursor getAttendanceRecordsForStudent(String studentID) {
-        String colList = AttendanceRecordsTableSchema.classIdCol.concat(" ") +
-                AttendanceRecordsTableSchema.periodCol.concat(" ") +
-                AttendanceRecordsTableSchema.presentCol.concat(" ") +
-                AttendanceRecordsTableSchema.lateArrivalCol.concat(" ") +
-                AttendanceRecordsTableSchema.earlyDepartureCol.concat(" ") +
-                AttendanceRecordsTableSchema.excusedCol;
-        String query = "SELECT " + colList + " FROM " + AttendanceRecordsTableSchema.name +
-                " WHERE " + AttendanceRecordsTableSchema.studentIdCol + " IS " + studentID +";";
+        String colList = AttendanceRecordsTableSchema.CLASS_ID_COL.concat(" ") +
+                AttendanceRecordsTableSchema.INTERVAL_COL.concat(" ") +
+                AttendanceRecordsTableSchema.PRESENT_COL.concat(" ") +
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL.concat(" ") +
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL.concat(" ") +
+                AttendanceRecordsTableSchema.EXCUSED_COL;
+        String query = "SELECT " + colList + " FROM " + AttendanceRecordsTableSchema.NAME +
+                " WHERE " + AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS " + studentID +";";
         return db.rawQuery(query, null);
     }
 
@@ -159,13 +160,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * Queries the database to see if a record exists to match the parameters.
      * @return Is there a record that matches?
      */
-    public boolean attendanceRecordExists(String studentID, String classID, int period) {
-        String[] columns = { AttendanceRecordsTableSchema.excusedCol };
-        String selection = AttendanceRecordsTableSchema.studentIdCol + " =?" +
-                AttendanceRecordsTableSchema.classIdCol + " =?" +
-                AttendanceRecordsTableSchema.periodCol + " =?";
-        String[] selectionArgs = {studentID, classID, Integer.toString(period)};
-        Cursor c = db.query(AttendanceRecordsTableSchema.name, columns, selection, selectionArgs,
+    public boolean attendanceRecordExists(String studentID, String classID, long interval) {
+        String[] columns = { AttendanceRecordsTableSchema.EXCUSED_COL};
+        String selection = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?" +
+                AttendanceRecordsTableSchema.CLASS_ID_COL + " =?" +
+                AttendanceRecordsTableSchema.INTERVAL_COL + " =?";
+        String[] selectionArgs = {studentID, classID, Long.toString(interval)};
+        Cursor c = db.query(AttendanceRecordsTableSchema.NAME, columns, selection, selectionArgs,
                 null, null, null);
         boolean exists = c.moveToFirst();
         c.close();
@@ -175,17 +176,17 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     /**
      * Inserts a record in the attendance records table. Parameters are values to go into the table.
      */
-    public void recordAttendance(String studentID, String classID, int period, boolean present,
+    public void recordAttendance(String studentID, String classID, long interval, boolean present,
                                  boolean lateArrival, boolean earlyDeparture, boolean excused) {
         ContentValues cVal = new ContentValues(6);
-        cVal.put(AttendanceRecordsTableSchema.studentIdCol, studentID);
-        cVal.put(AttendanceRecordsTableSchema.classIdCol, classID);
-        cVal.put(AttendanceRecordsTableSchema.periodCol, period);
-        cVal.put(AttendanceRecordsTableSchema.presentCol, present);
-        cVal.put(AttendanceRecordsTableSchema.lateArrivalCol, lateArrival);
-        cVal.put(AttendanceRecordsTableSchema.earlyDepartureCol, earlyDeparture);
-        cVal.put(AttendanceRecordsTableSchema.excusedCol, excused);
-        db.insertOrThrow(AttendanceRecordsTableSchema.name, null, cVal);
+        cVal.put(AttendanceRecordsTableSchema.STUDENT_ID_COL, studentID);
+        cVal.put(AttendanceRecordsTableSchema.CLASS_ID_COL, classID);
+        cVal.put(AttendanceRecordsTableSchema.INTERVAL_COL, interval);
+        cVal.put(AttendanceRecordsTableSchema.PRESENT_COL, present);
+        cVal.put(AttendanceRecordsTableSchema.LATE_ARRIVAL_COL, lateArrival);
+        cVal.put(AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL, earlyDeparture);
+        cVal.put(AttendanceRecordsTableSchema.EXCUSED_COL, excused);
+        db.insertOrThrow(AttendanceRecordsTableSchema.NAME, null, cVal);
     }
 
     /**
@@ -198,83 +199,90 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * @param earlyDeparture new value for earlyDeparture
      * @param excused new value for excused
      */
-    public void updateAttendanceRecord(String studentID, String classID, int period, boolean present,
+    public void updateAttendanceRecord(String studentID, String classID, long period, boolean present,
                                        boolean lateArrival, boolean earlyDeparture, boolean excused)
     {
         ContentValues cVal = new ContentValues(6);
-        cVal.put(AttendanceRecordsTableSchema.presentCol, present);
-        cVal.put(AttendanceRecordsTableSchema.lateArrivalCol, lateArrival);
-        cVal.put(AttendanceRecordsTableSchema.earlyDepartureCol, earlyDeparture);
-        cVal.put(AttendanceRecordsTableSchema.excusedCol, excused);
-        String where = AttendanceRecordsTableSchema.studentIdCol + " IS" + studentID +
-                " AND " + AttendanceRecordsTableSchema.classIdCol + " IS" + classID +
-                " AND " + AttendanceRecordsTableSchema.periodCol + "IS " + period;
-        db.update(AttendanceRecordsTableSchema.name, cVal, where, null);
+        cVal.put(AttendanceRecordsTableSchema.PRESENT_COL, present);
+        cVal.put(AttendanceRecordsTableSchema.LATE_ARRIVAL_COL, lateArrival);
+        cVal.put(AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL, earlyDeparture);
+        cVal.put(AttendanceRecordsTableSchema.EXCUSED_COL, excused);
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS" + studentID +
+                " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL + " IS" + classID +
+                " AND " + AttendanceRecordsTableSchema.INTERVAL_COL + "IS " + period;
+        db.update(AttendanceRecordsTableSchema.NAME, cVal, where, null);
     }
 
     /**
      * Deletes an attendance record from the database. Params are all part of the composite key.
      */
-    public void deleteAttendanceRecord(String studentID, String classID, int period) {
-        String where = AttendanceRecordsTableSchema.studentIdCol + " IS" + studentID +
-                " AND " + AttendanceRecordsTableSchema.classIdCol + " IS" + classID +
-                " AND " + AttendanceRecordsTableSchema.periodCol + "IS " + period;
-        db.delete(AttendanceRecordsTableSchema.name, where, null);
-    }
-
-    private long getAttendanceIntervalLength() {
-        return attendanceIntervalLength;
+    public void deleteAttendanceRecord(String studentID, String classID, long period) {
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS" + studentID +
+                " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL + " IS" + classID +
+                " AND " + AttendanceRecordsTableSchema.INTERVAL_COL + "IS " + period;
+        db.delete(AttendanceRecordsTableSchema.NAME, where, null);
     }
     //</editor-fold>
 
     //<editor-fold desc="Schema Classes">
     private static class BehaviorRecordTableSchema{
-        public static final String name = "BehaviorRecords";
+        public static final String NAME = "BehaviorRecords";
 
-        public static final String behaviorIdColDef = "behaviorID INTEGER NOT NULL,";
-        public static final String studentIdColDef = "studentID TEXT NOT NULL,";
-        public static final String classIdColDef = "classID TEXT NOT NULL,"; //Included because it might be useful to know when a student has different behaviors in different classes.
-        public static final String timestampColDef = "timestamp INTEGER NOT NULL,"; //use something that returns UNIX time in milliseconds
-        public static final String primaryKeyDef = "PRIMARY KEY (behaviorID, studentID, timestamp),"; //Why, yes, I do need all of these columns. Don't question me.
-        public static final String behaviorIdAliasDef = "FOREIGN KEY(behaviorID) REFERENCES behaviorAlias(behaviorID);";
+        public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER NOT NULL,";
+        public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
+        public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,"; //Included because it might be useful to know when a student has different behaviors in different classes.
+        public static final String TIMESTAMP_COL_DEF = "timestamp INTEGER NOT NULL,"; //use something that returns UNIX time in milliseconds
+        public static final String PRIMARY_KEY_DEF = "PRIMARY KEY (behaviorID, studentID, timestamp),"; //Why, yes, I do need all of these columns. Don't question me.
+        public static final String BEHAVIOR_ID_ALIAS_DEF = "FOREIGN KEY(behaviorID) REFERENCES behaviorAlias(behaviorID);";
         
-        public static final String behaviorIdCol = "behaviorID";
-        public static final String studentIdCol = "studentID";
-        public static final String classIdCol = "classID";
-        public static final String timestampCol = "timestamp";
+        public static final String BEHAVIOR_ID_COL = "behaviorID";
+        public static final String STUDENT_ID_COL = "studentID";
+        public static final String CLASS_ID_COL = "classID";
+        public static final String TIMESTAMP_COL = "timestamp";
     }
 
     private static class BehaviorAliasTableSchema{
-        public static final String name = "BehaviorAlias";
+        public static final String NAME = "BehaviorAlias";
 
-        public static final String behaviorIdColDef = "behaviorID INTEGER NOT NULL,";
-        public static final String behaviorNameColDef = "behaviorName TEXT,";
-        public static final String positivityColDef = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1));";
+        public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER NOT NULL,";
+        public static final String BEHAVIOR_NAME_COL_DEF = "behaviorName TEXT,";
+        public static final String POSITIVITY_COL_DEF = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1));";
 
-        public static final String behaviorIdCol = "behaviorID";
-        public static final String behaviorNameCol = "behaviorName";
-        public static final String positivityCol = "positivity";
+        public static final String BEHAVIOR_ID_COL = "behaviorID";
+        public static final String BEHAVIOR_NAME_COL = "behaviorName";
+        public static final String POSITIVITY_COL = "positivity";
     }
     
     private static class AttendanceRecordsTableSchema{
-        public static final String name = "AttendanceRecords";
+        public static final String NAME = "AttendanceRecords";
 
-        public static final String studentIdColDef = "studentID TEXT NOT NULL,";
-        public static final String classIdColDef = "classID TEXT NOT NULL,";
-        public static final String periodColDef = "period INTEGER NOT NULL,";
-        public static final String presentColDef = "present INTEGER NOT NULL CHECK(present IN(0, 1)),";
-        public static final String lateArrivalColDef = "lateArrival INTEGER NOT NULL CHECK(lateArrival IN(0, 1) AND present IS 1),";
-        public static final String earlyDepartureColDef = "earlyDeparture INTEGER NOT NULL CHECK(earlyDeparture IN(0, 1) AND present IS 1),";
-        public static final String excusedColDef = "excused INTEGER NOT NULL CHECK(excused IN(0, 1)),";
-        public static final String primaryKeyDef = "PRIMARY KEY(studentID, classID, period)";
+        public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
+        public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,";
+        public static final String INTERVAL_COL_DEF = "interval INTEGER NOT NULL,";
+        public static final String PRESENT_COL_DEF = "present INTEGER NOT NULL CHECK(present IN(0, 1)),";
+        public static final String LATE_ARRIVAL_COL_DEF = "lateArrival INTEGER NOT NULL CHECK(lateArrival IN(0, 1) AND present IS 1),";
+        public static final String EARLY_DEPARTURE_COL_DEF = "earlyDeparture INTEGER NOT NULL CHECK(earlyDeparture IN(0, 1) AND present IS 1),";
+        public static final String EXCUSED_COL_DEF = "excused INTEGER NOT NULL CHECK(excused IN(0, 1)),";
+        public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID, period)";
 
-        public static final String studentIdCol = "studentID";
-        public static final String classIdCol = "classID";
-        public static final String periodCol = "period";
-        public static final String presentCol = "present";
-        public static final String lateArrivalCol = "lateArrival";
-        public static final String earlyDepartureCol = "earlyDeparture";
-        public static final String excusedCol = "excused";
+        public static final String STUDENT_ID_COL = "studentID";
+        public static final String CLASS_ID_COL = "classID";
+        public static final String INTERVAL_COL = "interval";
+        public static final String PRESENT_COL = "present";
+        public static final String LATE_ARRIVAL_COL = "lateArrival";
+        public static final String EARLY_DEPARTURE_COL = "earlyDeparture";
+        public static final String EXCUSED_COL = "excused";
+    }
+
+    private static class StudentClassMappingTableSchema{
+        public static final String NAME = "StudentClassMap";
+
+        public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
+        public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,";
+        public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID)";
+
+        public static final String STUDENT_ID_COL = "studentID";
+        public static final String CLASS_ID_COL = "classID";
     }
     //</editor-fold>
 }
