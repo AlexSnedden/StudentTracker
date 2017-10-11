@@ -28,6 +28,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private SharedPreferences attendanceIntervalPref;
     private AsyncTask task;
 
+    //<editor-fold desc="Constructors and init()">
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
         this.context = context;
@@ -45,7 +46,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 Resources.getSystem().getString(R.string.attendance_interval_key), Context.MODE_PRIVATE);
 
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Send For and then Grab DB">
     public void sendForDB() {
         task = new AsyncTask() {
             @Override
@@ -66,6 +69,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             Log.d("DB_ERROR", "The database could not be retrieved.", e);
         }
     }
+    //</editor-fold>
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -131,7 +135,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         int period = 0; //Set to beginning of current attendance interval
         //TODO: Implement attendance period using SharedPreferences
         String query = "SELECT * FROM " + AttendanceRecordsTableSchema.name +
-                "WHERE " + AttendanceRecordsTableSchema.periodCol +" IS " +
+                "WHERE " + AttendanceRecordsTableSchema.periodCol + " IS " +
                 period + " AND " + AttendanceRecordsTableSchema.classIdCol +
                 " IS " + classID;
 
@@ -143,11 +147,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * @return Cursor containing all matching records
      */
     public Cursor getAttendanceRecordsForStudent(String studentID) {
-        String colList = AttendanceRecordsTableSchema.classIdCol + " " +
-                AttendanceRecordsTableSchema.periodCol + " " +
-                AttendanceRecordsTableSchema.presentCol + " " +
-                AttendanceRecordsTableSchema.lateArrivalCol + " " +
-                AttendanceRecordsTableSchema.earlyDepartureCol + " " +
+        String colList = AttendanceRecordsTableSchema.classIdCol.concat(" ") +
+                AttendanceRecordsTableSchema.periodCol.concat(" ") +
+                AttendanceRecordsTableSchema.presentCol.concat(" ") +
+                AttendanceRecordsTableSchema.lateArrivalCol.concat(" ") +
+                AttendanceRecordsTableSchema.earlyDepartureCol.concat(" ") +
                 AttendanceRecordsTableSchema.excusedCol;
         String query = "SELECT " + colList + " FROM " + AttendanceRecordsTableSchema.name +
                 " WHERE " + AttendanceRecordsTableSchema.studentIdCol + " IS " + studentID +";";
