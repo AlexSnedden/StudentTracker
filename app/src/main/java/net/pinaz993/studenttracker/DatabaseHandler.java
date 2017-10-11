@@ -2,6 +2,8 @@ package net.pinaz993.studenttracker;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,17 +24,30 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final String DATABASE_NAME = "StudentTracking.db";
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
     private SQLiteDatabase db;
+    private Context context;
+    private SharedPreferences pref;
+    private AsyncTask task;
 
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        this.context = context;
+        init();
     }
 
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
+        this.context = context;
+        init();
     }
 
     public void init() {
-        AsyncTask task = new AsyncTask() {
+        pref = context.getSharedPreferences(
+                Resources.getSystem().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+    }
+
+    public void sendForDB() {
+        task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] dbh) {
                 return null;
@@ -42,12 +57,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             }
         };
         task.execute(this);
+    }
+
+    public void grabDB() {
         try {
             db = (SQLiteDatabase) task.get();
         } catch (InterruptedException | ExecutionException e) {
             Log.d("DB_ERROR", "The database could not be retrieved.", e);
         }
-
     }
 
     @Override
@@ -104,7 +121,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    public void recordBehavior
 
     //<editor-fold desc="Attendance Record Handling">
     /**
