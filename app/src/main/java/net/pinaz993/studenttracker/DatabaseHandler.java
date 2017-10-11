@@ -25,8 +25,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
     private SQLiteDatabase db;
     private Context context;
-    private SharedPreferences attendanceIntervalPref;
     private AsyncTask task;
+    private long attendanceIntervalLength;// Number of milliseconds in interval
 
     //<editor-fold desc="Constructors and init()">
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
@@ -42,9 +42,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public void init() {
-        attendanceIntervalPref = context.getSharedPreferences(
-                Resources.getSystem().getString(R.string.attendance_interval_key), Context.MODE_PRIVATE);
-
     }
     //</editor-fold>
 
@@ -224,6 +221,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 " AND " + AttendanceRecordsTableSchema.periodCol + "IS " + period;
         db.delete(AttendanceRecordsTableSchema.name, where, null);
     }
+
+    private long getAttendanceIntervalLength() {
+        return attendanceIntervalLength;
+    }
     //</editor-fold>
 
     //<editor-fold desc="Schema Classes">
@@ -276,5 +277,4 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String excusedCol = "excused";
     }
     //</editor-fold>
-
 }
