@@ -67,6 +67,20 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String createStudentTable = "CREATE TABLE " +
+            StudentTableSchema.NAME + " (" +
+            StudentTableSchema.STUDENT_ID_COL_DEF +
+            StudentTableSchema.FIRST_NAME_COL_DEF +
+            StudentTableSchema.LAST_NAME_COL_DEF +
+            StudentTableSchema.EMAIL_COL_DEF +")";
+        db.execSQL(createStudentTable);
+        String createStudentClassMappingTable = "CREATE TABLE " +
+                StudentClassMappingTableSchema.NAME + " (" +
+                StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
+                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF +
+                StudentClassMappingTableSchema.PRIMARY_KEY_DEF +
+                StudentClassMappingTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
+        db.execSQL(createStudentClassMappingTable);
         String createBehaviorRecordTable = "CREATE TABLE " +
                 BehaviorRecordTableSchema.NAME + " (" +
                 BehaviorRecordTableSchema.BEHAVIOR_ID_COL_DEF +
@@ -74,7 +88,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 BehaviorRecordTableSchema.CLASS_ID_COL_DEF +
                 BehaviorRecordTableSchema.TIMESTAMP_COL_DEF +
                 BehaviorRecordTableSchema.PRIMARY_KEY_DEF +
-                BehaviorRecordTableSchema.BEHAVIOR_ID_ALIAS_DEF + ")";
+                BehaviorRecordTableSchema.BEHAVIOR_ID_ALIAS_DEF +
+                BehaviorRecordTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
         db.execSQL(createBehaviorRecordTable);
         String createBehaviorAliasTable = "CREATE TABLE " +
                 BehaviorAliasTableSchema.NAME + " (" +
@@ -91,14 +106,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 AttendanceRecordsTableSchema.LATE_ARRIVAL_COL_DEF +
                 AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL_DEF +
                 AttendanceRecordsTableSchema.EXCUSED_COL_DEF +
-                AttendanceRecordsTableSchema.PRIMARY_KEY_DEF + ")";
+                AttendanceRecordsTableSchema.PRIMARY_KEY_DEF +
+                AttendanceRecordsTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
         db.execSQL(createAttendanceRecordsTable);
-        String createStudentClassMappingTable = "CREATE TABLE " +
-                StudentClassMappingTableSchema.NAME + " (" +
-                StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
-                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF +
-                StudentClassMappingTableSchema.PRIMARY_KEY_DEF +")";
-        db.execSQL(createStudentClassMappingTable);
     }
 
     @Override
@@ -124,6 +134,55 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         c.close();
         onCreate(db);
     }
+
+    //<editor-fold desc="Student Record Handling">
+    public void recordStudent(String studentID, String firstName,
+                              String lastName, @Nullable String email) {
+        ContentValues values = new ContentValues();
+        values.put(StudentTableSchema.STUDENT_ID_COL, studentID);
+        values.put(StudentTableSchema.FIRST_NAME_COL, firstName);
+        values.put(StudentTableSchema.LAST_NAME_COL, lastName);
+        values.put(StudentTableSchema.EMAIL_COL, email);
+        db.insert(StudentTableSchema.NAME, null, values);
+    }
+
+    public boolean studentExists(String studentID) {
+        String selectString = StudentTableSchema.STUDENT_ID_COL + " =?";
+        Cursor c = db.query(StudentTableSchema.NAME,
+                new String[]{StudentTableSchema.STUDENT_ID_COL}, selectString,
+                new String[] {studentID}, null, null, null);
+        boolean rtnval = c.moveToFirst();
+        c.close();
+        return rtnval;
+    }
+
+    public Student retrieveStudent(String studentID) {
+        String selectString = " WHERE " + StudentTableSchema.STUDENT_ID_COL + " =?";
+        Cursor c = db.query(StudentTableSchema.NAME,
+                new String[]{StudentTableSchema.STUDENT_ID_COL}, selectString,
+                new String[] {studentID}, null, null, null);
+        String firstName = c.getString(c.getColumnIndex(StudentTableSchema.FIRST_NAME_COL));
+        String lastName = c.getString(c.getColumnIndex(StudentTableSchema.LAST_NAME_COL));
+        String email;
+        if(!c.isNull(c.getColumnIndex(StudentTableSchema.EMAIL_COL))){
+            email = c.getString(c.getColumnIndex(StudentTableSchema.EMAIL_COL));
+        } else {
+            email = null;
+        }
+        c.close();
+        return new Student(firstName, lastName, studentID, email);
+    }
+
+    public void updateStudent(String studentID, @Nullable String firstName,
+                              @Nullable String lastName, @Nullable String email){
+        ContentValues cv = new ContentValues();
+        String where = StudentTableSchema.STUDENT_ID_COL +" =?";
+        if(firstName != null) cv.put(StudentTableSchema.FIRST_NAME_COL, firstName);
+        if(lastName != null) cv.put(StudentTableSchema.LAST_NAME_COL, lastName);
+        if(email != null) cv.put(StudentTableSchema.EMAIL_COL, email);
+        if(cv.size() != 0) db.update(StudentTableSchema.NAME, cv, where, new String[]{studentID});
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Attendance Record Handling">
     /**
@@ -233,7 +292,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,"; //Included because it might be useful to know when a student has different behaviors in different classes.
         public static final String TIMESTAMP_COL_DEF = "timestamp INTEGER NOT NULL,"; //use something that returns UNIX time in milliseconds
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY (behaviorID, studentID, timestamp),"; //Why, yes, I do need all of these columns. Don't question me.
-        public static final String BEHAVIOR_ID_ALIAS_DEF = "FOREIGN KEY(behaviorID) REFERENCES behaviorAlias(behaviorID);";
+        public static final String BEHAVIOR_ID_ALIAS_DEF = "FOREIGN KEY(behaviorID) REFERENCES BehaviorAlias(behaviorID),";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
         
         public static final String BEHAVIOR_ID_COL = "behaviorID";
         public static final String STUDENT_ID_COL = "studentID";
@@ -264,6 +324,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String EARLY_DEPARTURE_COL_DEF = "earlyDeparture INTEGER NOT NULL CHECK(earlyDeparture IN(0, 1) AND present IS 1),";
         public static final String EXCUSED_COL_DEF = "excused INTEGER NOT NULL CHECK(excused IN(0, 1)),";
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID, period)";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
 
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";
@@ -280,6 +341,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
         public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,";
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID)";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
 
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";
