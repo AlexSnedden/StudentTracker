@@ -27,38 +27,8 @@ public class ClassList {
         return studentList;
     }
 
-    private final String JSON_FIRST_NAME = "fName";
-    private final String JSON_LAST_NAME = "lName";
-    private final String JSON_EMAIL = "email";
-    private final String JSON_ID = "ID";
-
     public ClassList(String studentRecords) {
         //TODO: implement email handling
-        /*
-        JSONArray studentArray = null;
-        JSONObject student = null;
-
-        try {
-            Log.v("boom", studentRecords.toString());
-            studentArray = new JSONArray(studentRecords.get("test_students").toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        int jsonArrayLength = studentArray.length();
-        studentList = new Student[jsonArrayLength];
-        for(int i = 0; i < jsonArrayLength; i++) {
-            try {
-                student = studentArray.getJSONObject(i);
-                // create student object and append it to the studentList array
-                studentList[i] = new Student(student.get(JSON_FIRST_NAME).toString(),
-                        student.get(JSON_LAST_NAME).toString(),
-                        student.get(JSON_ID).toString());
-
-            } catch(JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        */
         CSVReader csvReader = new CSVReader(new StringReader(studentRecords), '\t');
         List<String[]> csvStudents = null;
         try {
