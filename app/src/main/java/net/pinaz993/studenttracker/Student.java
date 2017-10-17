@@ -1,4 +1,6 @@
 package net.pinaz993.studenttracker;
+import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.joda.time.Duration;
@@ -9,6 +11,8 @@ import org.joda.time.LocalDate;
 import java.sql.Timestamp;
 
 import io.paperdb.Paper;
+
+import static net.pinaz993.studenttracker.MyApplication.dbHandler;
 
 
 /**
@@ -144,18 +148,6 @@ public class Student {
     }
 
     /**
-     * Deletes the record that matches the record defined by the following:
-     *
-     * @param classID  The class the student was to attend
-     * @param interval The time and date of attendance.
-     */
-    public void deleteAttendanceRecord(String classID, AttendanceInterval interval) {
-        // TODO: Implement Student.deleteRecord()
-
-        //Find the record that matches this one and delete it. If there isn't one, do nothing.
-    }
-
-    /**
      * Deletes all record for this student, possibly for this student and a given class
      *
      * @param classID The class the student was to attend
@@ -187,11 +179,15 @@ public class Student {
     }
 
     /**
-     * Saves the student to disk using Paper. Anything that shouldn't be saved needs to be marked
-     * as transient, such as an attendance summery.
+     * Saves the student to the student database. Anything that shouldn't be saved needs to be marked
+     * as transient, such as an attendance summary.
      */
     public void save() {
-        Paper.book(BOOK_ID).write(studentID, this);
+        if(dbHandler.studentExists(studentID)) {
+            dbHandler.updateStudent(studentID, firstName, lastName, email);
+        } else {
+            dbHandler.recordStudent(studentID, firstName, lastName, email);
+        }
     }
 
     public AttendanceSummary compileAttendanceSummery() {
