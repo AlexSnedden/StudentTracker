@@ -59,16 +59,16 @@ public class ClassList {
             }
         }
         */
-        CSVReader csvReader = new CSVReader(new StringReader(studentRecords));
+        CSVReader csvReader = new CSVReader(new StringReader(studentRecords), '\t');
         List<String[]> csvStudents = null;
         try {
-            studentList = csvReader.readAll();
+            csvStudents = csvReader.readAll();
         } catch (IOException e) {
             e.printStackTrace();
         }
         studentList = new Student[csvStudents.size()];
         for(int i=0; i < studentList.length; i++) {
-            
+            studentList[i] = new Student(csvStudents.get(i)[0], csvStudents.get(i)[1], csvStudents.get(i)[2]);
         }
     }
 

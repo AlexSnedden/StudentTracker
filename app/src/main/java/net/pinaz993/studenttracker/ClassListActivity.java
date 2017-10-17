@@ -15,20 +15,19 @@ public class ClassListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_list);
 
-        InputStream jsonFileStream = getApplicationContext().getResources().openRawResource(R.raw.test_students);
+        InputStream csvFileStream = getApplicationContext().getResources().openRawResource(R.raw.test_students);
         byte[] buffer = null;
-        String jsonString = null;
-        JSONObject studentData = null;
+        String studentData = null;
+        String csvString = null;
         try {
-            buffer = new byte[jsonFileStream.available()];
-            jsonFileStream.read(buffer);
-            jsonFileStream.close();
-            jsonString = new String(buffer, "UTF-8");
-            studentData = new JSONObject(jsonString);
+            buffer = new byte[csvFileStream.available()];
+            csvFileStream.read(buffer);
+            csvFileStream.close();
+            csvString = new String(buffer, "UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ClassList studentList = new ClassList(studentData);
+        ClassList studentList = new ClassList(csvString);
         StudentPaneAdapter studentPaneList = new StudentPaneAdapter(getApplicationContext(),
                 studentList.getStudentList());
         ListView list = (ListView)findViewById(R.id.list);
