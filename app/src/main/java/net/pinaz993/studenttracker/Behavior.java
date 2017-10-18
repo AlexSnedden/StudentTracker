@@ -32,6 +32,14 @@ public class Behavior{
         public String toString() {
             return this.name;
         }
+
+        public static Positivity toPos(int i){
+            switch (i){
+                case -1: return NEGATIVE;
+                case 1: return POSITIVE;
+                default: return NEUTRAL;
+            }
+        }
     }
 
     public final int behaviorID;

@@ -139,7 +139,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     //<editor-fold desc="Student Record Handling">
-    public void recordStudent(String studentID, String firstName,
+    public void addStudent(String studentID, String firstName,
                               String lastName, @Nullable String email) {
         ContentValues values = new ContentValues();
         values.put(StudentTableSchema.STUDENT_ID_COL, studentID);
@@ -179,11 +179,16 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void updateStudent(String studentID, @Nullable String firstName,
                               @Nullable String lastName, @Nullable String email){
         ContentValues cv = new ContentValues();
-        String where = StudentTableSchema.STUDENT_ID_COL +" =?";
+        String where = StudentTableSchema.STUDENT_ID_COL +" = ?";
         if(firstName != null) cv.put(StudentTableSchema.FIRST_NAME_COL, firstName);
         if(lastName != null) cv.put(StudentTableSchema.LAST_NAME_COL, lastName);
         if(email != null) cv.put(StudentTableSchema.EMAIL_COL, email);
         if(cv.size() != 0) db.update(StudentTableSchema.NAME, cv, where, new String[]{studentID});
+    }
+
+    public void deleteStudent(String studentID){
+        String where = StudentTableSchema.STUDENT_ID_COL + " = ?";
+        db.delete(StudentTableSchema.NAME, where,new String[]{studentID});
     }
     //</editor-fold>
 
@@ -315,12 +320,115 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public Cursor getStudentBehaviorRecords(String studentID){
         String[] colList = {BehaviorRecordTableSchema.CLASS_ID_COL,
-                BehaviorRecordTableSchema.CLASS_ID_COL,
                 BehaviorRecordTableSchema.BEHAVIOR_ID_COL};
-        String where = BehaviorRecordTableSchema.STUDENT_ID_COL + " =?";
-        return db.query(false, BehaviorRecordTableSchema.NAME,
-                colList, where, new String[]{studentID},
-                null ,null, BehaviorRecordTableSchema.CLASS_ID_COL, null);
+        String where = BehaviorRecordTableSchema.STUDENT_ID_COL + " = ?";
+        return db.query(BehaviorRecordTableSchema.NAME,
+                colList, where, new String[]{studentID}, null ,null,
+                BehaviorRecordTableSchema.CLASS_ID_COL);
+    }
+
+    public Cursor getClassBehaviorRecords(String classId){
+        String[] colLost = {BehaviorRecordTableSchema.STUDENT_ID_COL,
+                BehaviorRecordTableSchema.BEHAVIOR_ID_COL};
+        String where = BehaviorRecordTableSchema.CLASS_ID_COL + " = ?";
+        return db.query(BehaviorRecordTableSchema.NAME,
+                colLost, where, new String[]{classId}, null, null,
+                BehaviorRecordTableSchema.STUDENT_ID_COL);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Behavior Alias Handling">
+    public void addNewBehavior(String behaviorName, int positivity){
+        ContentValues cval = new ContentValues(2);
+        cval.put(BehaviorAliasTableSchema.BEHAVIOR_NAME_COL, behaviorName);
+        cval.put(BehaviorAliasTableSchema.POSITIVITY_COL, positivity);
+        db.insert(BehaviorAliasTableSchema.NAME, null, cval);
+    }
+
+    public void updateBehavior(int behaviorID, @Nullable String behaviorName, int positivity){
+        ContentValues cval = new ContentValues();
+        String where = BehaviorAliasTableSchema.BEHAVIOR_ID_COL + " = ?";
+        if (behaviorName != null) cval.put(BehaviorAliasTableSchema.BEHAVIOR_NAME_COL, behaviorName);
+        db.update(BehaviorAliasTableSchema.NAME, cval, where, new String[] {Integer.toString(behaviorID)});
+    }
+
+    public void deleteBehavior(int behaviorID){
+        String where = BehaviorAliasTableSchema.BEHAVIOR_ID_COL + " = ?";
+        db.delete(BehaviorAliasTableSchema.NAME, where, new String[]{Integer.toString(behaviorID)});
+    }
+
+    public Cursor getAllBehaviors(){
+        return db.query(BehaviorAliasTableSchema.NAME, null, null, null, null, null,
+                BehaviorAliasTableSchema.BEHAVIOR_ID_COL);
+    }
+
+    public Behavior[] getBehaviorObjects(Context context){
+        Cursor c = getAllBehaviors();
+        Behavior[] behaviors = new Behavior[c.getCount()];
+        for(c.moveToFirst(); c.moveToNext(); c.isAfterLast()){
+            Behavior currentBehavior = new Behavior(
+                    c.getInt(c.getColumnIndex(BehaviorAliasTableSchema.BEHAVIOR_ID_COL)),
+                    c.getString(c.getColumnIndex(BehaviorAliasTableSchema.BEHAVIOR_NAME_COL)),
+                    Behavior.Positivity.toPos(c.getInt(c.getColumnIndex(BehaviorAliasTableSchema.POSITIVITY_COL))),
+                    context
+            );
+            behaviors[c.getPosition()] = currentBehavior;
+        }
+        c.close();
+        return behaviors;
+    }
+
+    public boolean behaviorExists(int behaviorID){
+        String where = BehaviorAliasTableSchema.BEHAVIOR_ID_COL + " = ?";
+        Cursor c = db.query(BehaviorAliasTableSchema.NAME, null, where,
+                new String[]{Integer.toString(behaviorID)}, null, null, null);
+        boolean rtnval =  c.moveToFirst();
+        c.close();
+        return rtnval;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Class List Handling">
+    public void addStudentToClass(String studentID, String classID){
+        ContentValues cval = new ContentValues();
+        cval.put(StudentClassMappingTableSchema.STUDENT_ID_COL, studentID);
+        cval.put(StudentClassMappingTableSchema.CLASS_ID_COL, classID);
+        db.insert(StudentClassMappingTableSchema.NAME, null, cval);
+    }
+
+    public void removeStudentFromClass(String studentID, String classID){
+        String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ? AND " +
+                StudentClassMappingTableSchema.CLASS_ID_COL + " = ?";
+        db.delete(StudentClassMappingTableSchema.NAME, where, new String[]{studentID, classID});
+    }
+
+    public void removeStudentfromAllClasses(String studentID){
+        String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ?";
+        db.delete(StudentClassMappingTableSchema.NAME, where,new String[]{studentID});
+    }
+
+    public boolean studentInClass(String studentID, String classID){
+        String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ? AND " +
+                StudentClassMappingTableSchema.CLASS_ID_COL_DEF + " = ?";
+     Cursor c = db.query(StudentClassMappingTableSchema.NAME, null, where,
+             new String[]{studentID, classID},null, null, null);
+        boolean rtnval = c.moveToFirst();
+        c.close();
+        return rtnval;
+    }
+
+    public Cursor getStudentsInClass(String classID){
+        String where = StudentClassMappingTableSchema.CLASS_ID_COL + " = ?";
+        return db.query(StudentClassMappingTableSchema.NAME,
+                new String[]{StudentClassMappingTableSchema.STUDENT_ID_COL}, where,
+                new String[]{classID}, null, null, null);
+    }
+
+    public Cursor getClassesForStudent(String studentID){
+        String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ?";
+        return db.query(StudentClassMappingTableSchema.NAME,
+                new String[]{StudentClassMappingTableSchema.CLASS_ID_COL}, where,
+                new String[]{studentID}, null, null, null);
     }
     //</editor-fold>
 
@@ -345,7 +453,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static class BehaviorAliasTableSchema{
         public static final String NAME = "BehaviorAlias";
 
-        public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER NOT NULL,";
+        public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER PRIMARY KEY AUTOINCREMENT,";
         public static final String BEHAVIOR_NAME_COL_DEF = "behaviorName TEXT,";
         public static final String POSITIVITY_COL_DEF = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1));";
 
