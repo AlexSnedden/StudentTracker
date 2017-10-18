@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.joda.time.Instant;
+
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -187,53 +189,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     //<editor-fold desc="Attendance Record Handling">
     /**
-     * Grabs all attendance records from the current attendance interval.
-     * @param classID The class for which to grab the attendance record
-     * @return a Cursor containing all the records collected
-     */
-    public Cursor getCurrentAttendanceRecords(String classID, SettingsHandler settings){
-        long period = AttendanceInterval.getCurrentStart(settings);
-        String query = "SELECT * FROM " + AttendanceRecordsTableSchema.NAME +
-                "WHERE " + AttendanceRecordsTableSchema.INTERVAL_COL + " IS " +
-                period + " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL +
-                " IS " + classID;
-        return db.rawQuery(query, null);
-    }
-
-    /**
-     * Grabs all attendance records for the studentID provided.
-     * @return Cursor containing all matching records
-     */
-    public Cursor getAttendanceRecordsForStudent(String studentID) {
-        String colList = AttendanceRecordsTableSchema.CLASS_ID_COL.concat(" ") +
-                AttendanceRecordsTableSchema.INTERVAL_COL.concat(" ") +
-                AttendanceRecordsTableSchema.PRESENT_COL.concat(" ") +
-                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL.concat(" ") +
-                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL.concat(" ") +
-                AttendanceRecordsTableSchema.EXCUSED_COL;
-        String query = "SELECT " + colList + " FROM " + AttendanceRecordsTableSchema.NAME +
-                " WHERE " + AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS " + studentID +";";
-        return db.rawQuery(query, null);
-    }
-
-    /**
-     * Queries the database to see if a record exists to match the parameters.
-     * @return Is there a record that matches?
-     */
-    public boolean attendanceRecordExists(String studentID, String classID, long interval) {
-        String[] columns = { AttendanceRecordsTableSchema.EXCUSED_COL};
-        String selection = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?" +
-                AttendanceRecordsTableSchema.CLASS_ID_COL + " =?" +
-                AttendanceRecordsTableSchema.INTERVAL_COL + " =?";
-        String[] selectionArgs = {studentID, classID, Long.toString(interval)};
-        Cursor c = db.query(AttendanceRecordsTableSchema.NAME, columns, selection, selectionArgs,
-                null, null, null);
-        boolean exists = c.moveToFirst();
-        c.close();
-        return exists;
-    }
-
-    /**
      * Inserts a record in the attendance records table. Parameters are values to go into the table.
      */
     public void recordAttendance(String studentID, String classID, long interval, boolean present,
@@ -246,7 +201,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         cVal.put(AttendanceRecordsTableSchema.LATE_ARRIVAL_COL, lateArrival);
         cVal.put(AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL, earlyDeparture);
         cVal.put(AttendanceRecordsTableSchema.EXCUSED_COL, excused);
-        db.insertOrThrow(AttendanceRecordsTableSchema.NAME, null, cVal);
+        db.insert(AttendanceRecordsTableSchema.NAME, null, cVal);
     }
 
     /**
@@ -277,17 +232,97 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * Deletes an attendance record from the database. Params are all part of the composite key.
      */
     public void deleteAttendanceRecord(String studentID, String classID, long period) {
-        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS" + studentID +
-                " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL + " IS" + classID +
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " IS " + studentID +
+                " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL + " IS " + classID +
                 " AND " + AttendanceRecordsTableSchema.INTERVAL_COL + "IS " + period;
         db.delete(AttendanceRecordsTableSchema.NAME, where, null);
     }
+
+    /**
+     * Grabs all attendance records from the current attendance interval.
+     * @param classID The class for which to grab the attendance record
+     * @return a Cursor containing all the records collected
+     */
+    public Cursor getCurrentAttendanceRecordsForClass(String classID, SettingsHandler settings){
+        Long interval = AttendanceInterval.getCurrentStart(settings);
+        String[] colList ={AttendanceRecordsTableSchema.STUDENT_ID_COL,
+                AttendanceRecordsTableSchema.PRESENT_COL,
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
+                AttendanceRecordsTableSchema.EXCUSED_COL};
+        String where = AttendanceRecordsTableSchema.CLASS_ID_COL.concat(" IS ?") +
+                AttendanceRecordsTableSchema.INTERVAL_COL.concat(" IS ?");
+        String[] wheres = {classID, interval.toString()};
+        return db.query(AttendanceRecordsTableSchema.NAME, colList, where, wheres, null, null,
+                AttendanceRecordsTableSchema.INTERVAL_COL, null);
+    }
+
+    /**
+     * Grabs all attendance records for the studentID provided.
+     * @return Cursor containing all matching records
+     */
+    public Cursor getAttendanceRecordsForStudent(String studentID) {
+        String[] colList = {AttendanceRecordsTableSchema.CLASS_ID_COL,
+                AttendanceRecordsTableSchema.INTERVAL_COL,
+                AttendanceRecordsTableSchema.PRESENT_COL,
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
+                AttendanceRecordsTableSchema.EXCUSED_COL};
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?";
+        return db.query(AttendanceRecordsTableSchema.NAME, colList, where,new String[] {studentID},
+                null, null, AttendanceRecordsTableSchema.INTERVAL_COL, null);
+    }
+
+    /**
+     * Queries the database to see if a record exists to match the parameters.
+     * @return Is there a record that matches?
+     */
+    public boolean attendanceRecordExists(String studentID, String classID, long interval) {
+        String[] columns = { AttendanceRecordsTableSchema.EXCUSED_COL};
+        String selection = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?" +
+                AttendanceRecordsTableSchema.CLASS_ID_COL + " =?" +
+                AttendanceRecordsTableSchema.INTERVAL_COL + " =?";
+        String[] selectionArgs = {studentID, classID, Long.toString(interval)};
+        Cursor c = db.query(AttendanceRecordsTableSchema.NAME, columns, selection, selectionArgs,
+                null, null, null);
+        boolean exists = c.moveToFirst();
+        c.close();
+        return exists;
+    }
     //</editor-fold>
 
-    public void recordStudentBehavior(Student student, Behavior behavior, long interval) {
+    //<editor-fold desc="Behavior Record Handling">
+    public void recordStudentBehavior(String studentID, String behaviorID,
+                                      String classID, long timestamp) {
         ContentValues cval = new ContentValues(3);
-        cval.put(BehaviorRecordTableSchema.STUDENT_ID_COL, student.getID());
+        cval.put(BehaviorRecordTableSchema.STUDENT_ID_COL, studentID);
+        cval.put(BehaviorRecordTableSchema.BEHAVIOR_ID_COL, behaviorID);
+        cval.put(BehaviorRecordTableSchema.CLASS_ID_COL, classID);
+        cval.put(BehaviorRecordTableSchema.TIMESTAMP_COL, timestamp);
+        db.insert(BehaviorRecordTableSchema.NAME, null, cval);
     }
+
+    public void recordStudentBehaviorNow(String studentID, String behaviorID, String classID) {
+        recordStudentBehavior(studentID, behaviorID, classID, new Instant().getMillis());
+    }
+
+    public void deleteBehaviorRecord(String studentID, String behaviorID, long timestamp) {
+        String where = BehaviorRecordTableSchema.STUDENT_ID_COL.concat(" IS ") + studentID +
+                " AND " + BehaviorRecordTableSchema.BEHAVIOR_ID_COL.concat(" IS ") + behaviorID +
+                " AND " + BehaviorRecordTableSchema.TIMESTAMP_COL.compareTo(" IS ") + timestamp;
+        db.delete(BehaviorRecordTableSchema.NAME, where, null);
+    }
+
+    public Cursor getStudentBehaviorRecords(String studentID){
+        String[] colList = {BehaviorRecordTableSchema.CLASS_ID_COL,
+                BehaviorRecordTableSchema.CLASS_ID_COL,
+                BehaviorRecordTableSchema.BEHAVIOR_ID_COL};
+        String where = BehaviorRecordTableSchema.STUDENT_ID_COL + " =?";
+        return db.query(false, BehaviorRecordTableSchema.NAME,
+                colList, where, new String[]{studentID},
+                null ,null, BehaviorRecordTableSchema.CLASS_ID_COL, null);
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Schema Classes">
     private static class BehaviorRecordTableSchema{
