@@ -245,7 +245,7 @@ public class Student {
         return email;
     }
 
-    public String getStudentID() {
+    public String getID() {
         return studentID;
     }
 

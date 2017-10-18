@@ -1,9 +1,7 @@
 package net.pinaz993.studenttracker;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +69,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
         final Student student = (Student)getItem(position);
         if(student != null) {
-            binderHelper.bind(holder.swipe, student.getStudentID());
+            binderHelper.bind(holder.swipe, student.getID());
         }
             //Set click handlers
         holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

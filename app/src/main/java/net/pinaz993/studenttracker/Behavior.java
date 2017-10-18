@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat;
 
 /**
  * Created by Patrick Shannon on 10/18/2017.
- * This class represents user defined behaviors that are either positive, negetive, or neutral.
+ * This class represents user defined behaviors that are either positive, negative, or neutral.
  * Instances of a behavior can be recorded in a database, and later can be compiled. This class is
  * mostly used to make constructing a list view easier.
  */

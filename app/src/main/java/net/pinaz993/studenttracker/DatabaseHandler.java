@@ -191,8 +191,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * @param classID The class for which to grab the attendance record
      * @return a Cursor containing all the records collected
      */
-    public Cursor getCurrentAttendanceRecords(String classID){
-        long period = AttendanceInterval.getCurrentStart();
+    public Cursor getCurrentAttendanceRecords(String classID, SettingsHandler settings){
+        long period = AttendanceInterval.getCurrentStart(settings);
         String query = "SELECT * FROM " + AttendanceRecordsTableSchema.NAME +
                 "WHERE " + AttendanceRecordsTableSchema.INTERVAL_COL + " IS " +
                 period + " AND " + AttendanceRecordsTableSchema.CLASS_ID_COL +
@@ -283,6 +283,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.delete(AttendanceRecordsTableSchema.NAME, where, null);
     }
     //</editor-fold>
+
+    public void recordStudentBehavior(Student student, Behavior behavior, long interval) {
+        ContentValues cval = new ContentValues(3);
+        cval.put(BehaviorRecordTableSchema.STUDENT_ID_COL, student.getID());
+    }
 
     //<editor-fold desc="Schema Classes">
     private static class BehaviorRecordTableSchema{
