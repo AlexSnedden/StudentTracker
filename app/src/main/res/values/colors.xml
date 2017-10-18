@@ -10,4 +10,8 @@
     <color name="colorSecondaryDark">#000000</color>
     <color name="colorSecondaryText">#ffffff</color>
     <color name="colorSecondaryAccent">#a00aa0</color>
+
+    <color name="colorBehaviorPositive">#66ff66</color>
+    <color name="colorBehaviorNeutral">#999999</color>
+    <color name="colorBehaviorNegetive">#ff6666</color>
 </resources>
