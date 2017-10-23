@@ -25,6 +25,8 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
  * Naturally, when this is constructed, it will need to have access to a single student object.
  * Other than that, it shouldn't need anything other than the context. The color of the main pane
  * will be determined by the conditional formatting from the student object.
+ *
+ * StudentPaneAdapter is an Array Adapter that adapts student panes to a list view.
  * Created by Patrick Shannon on 9/20/2017.
  */
 

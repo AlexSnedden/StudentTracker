@@ -35,7 +35,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         init();
     }
 
-    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
+    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory,
+                           DatabaseErrorHandler errorHandler) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
         this.context = context;
         init();
