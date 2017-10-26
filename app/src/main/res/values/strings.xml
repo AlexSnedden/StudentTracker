@@ -125,9 +125,4 @@ Nullam tristique a dolor nec aliquet. Nulla volutpat interdum nunc ullamcorper s
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="attendance_mode_key">ATTENDANCE_INTERVAL</string>
-    <string name="settings_key">SETTINGS</string>
-    <string name="attendance_mode_daily">DAILY</string>
-    <string name="attendance_mode_weekly">WEEKLY</string>
-    <string name="is_first_time_launch">IS_FIRST_TIME_LAUNCH</string>
 </resources>
