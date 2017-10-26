@@ -1,5 +1,4 @@
 package net.pinaz993.studenttracker;
-import io.paperdb.Paper;
 
 
 /**
@@ -13,11 +12,7 @@ public class Student {
     private final String lastName;
     private final String email;
     private final String studentID;
-    private boolean delinquent; // condition for read formatting on the student's name
 
-    public static Student retrieve(String studentID) {
-        return Paper.book(BOOK_ID).read(studentID);
-    }
 
     /**
      *
@@ -47,8 +42,6 @@ public class Student {
         this.studentID = studentID;
         this.email = null;
     }
-    /**
-     * Takes attendance data and records it in storage
     public void recordAttendance(){
             //TODO: Replace with SQL implementation, because querying
     }
@@ -59,19 +52,7 @@ public class Student {
          */
     }
 
-    public boolean isDelinquent() { return delinquent; }
 
-
-    public void setDelinquent(boolean delinquent) { this.delinquent = delinquent; }
-
-    public boolean isDelinquent() {return delinquent;}
-
-    public void setDelinquent(boolean delinquent) {this.delinquent = delinquent;}
-
-
-    public void save() {
-        Paper.book(BOOK_ID).write(studentID, this);
-    }
 
     public String getFirstName() {return firstName;}
 
