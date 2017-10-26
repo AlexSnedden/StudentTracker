@@ -1,9 +1,10 @@
 package net.pinaz993.studenttracker;
 
+import com.opencsv.CSVReader;
+
 import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import io.paperdb.Paper;
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
@@ -39,7 +40,7 @@ public class ClassList {
 
     public void addStudent(Student student) {
         students.add(student);
-        studentIDs.add(student.getID());
+        studentIDs.add(student.getStudentID());
     }
 
     public void removeStudent(Student student) {
@@ -88,7 +89,7 @@ public class ClassList {
         Student student;
         while(studentsIterator.hasNext()) {
             student = studentsIterator.next();
-            studentIDs.add(student.getID());
+            studentIDs.add(student.getStudentID());
             student.save();
         }
         // ensure student pointer is null as well as pointer to array list of students, then
