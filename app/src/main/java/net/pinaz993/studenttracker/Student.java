@@ -3,8 +3,6 @@ import android.support.annotation.Nullable;
 
 import java.sql.Timestamp;
 
-import io.paperdb.Paper;
-
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
@@ -31,11 +29,6 @@ public class Student {
     private final String email;
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
-
-
-    public static Student retrieve(String studentID) {
-        return Paper.book(BOOK_ID).read(studentID);
-    }
 
     //<editor-fold desc="Constructors">
     /**
@@ -171,14 +164,6 @@ public class Student {
         //Query the database to find a record for this student with this class id and in that
         //attendance interval
         return false;
-    }
-
-    /**
-     * Saves the student to disk using Paper. Anything that shouldn't be saved needs to be marked
-     * as transient, such as an attendance summery.
-     */
-    public void save() {
-        Paper.book(BOOK_ID).write(studentID, this);
     }
 
     public AttendanceSummary compileAttendanceSummery() {
