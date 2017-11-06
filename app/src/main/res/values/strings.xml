@@ -29,11 +29,7 @@
     <string name="invalidStudentTxt">Invalid Student</string>
     <string name="excusedTxt">Excused</string>
 
-    <string name="lorem_ipsum">
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non lorem mollis turpis tempus egestas. Nunc egestas scelerisque mauris, eget mattis nunc porttitor iaculis. In nec tellus a mauris pellentesque posuere. Donec convallis est ac mi faucibus, non porta lorem posuere. Cras egestas nunc mi, nec scelerisque tellus accumsan in. Aenean vel arcu velit. Vestibulum et tellus ut tortor fermentum pulvinar. Nunc quis nisl ut odio imperdiet dignissim.
-
-Nullam tristique a dolor nec aliquet. Nulla volutpat interdum nunc ullamcorper scelerisque. Sed ullamcorper pharetra tortor id pulvinar. Praesent maximus rhoncus erat, sit amet sollicitudin est vestibulum ut. Mauris sodales nunc a placerat pellentesque. Etiam facilisis quis lacus nec sagittis. Nulla ac ipsum justo. Duis commodo quam vel vulputate mollis. Etiam vitae odio libero. Maecenas ultricies augue in magna tempor condimentum. Duis convallis accumsan ex, non consequat mauris bibendum ut. Nunc et varius justo, at pellentesque diam. </string>
     <string name="title_activity_collapse_test">CollapseTest</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -125,4 +121,7 @@ Nullam tristique a dolor nec aliquet. Nulla volutpat interdum nunc ullamcorper s
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="behavior_negative">Negetive</string>
+    <string name="behavior_neutral">Neutral</string>
+    <string name="behavior_positive">Positive</string>
 </resources>

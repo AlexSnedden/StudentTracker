@@ -23,7 +23,9 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/app_bar_min_height"
             android:layout_marginEnd="8dp"
+            android:gravity="center"
             android:text="@string/app_name"
+            android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/drop_menu_btn"
@@ -44,36 +46,29 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <view
+    <View
         android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorSecondaryDark"
+        style="@style/Divider"
+        android:layout_marginTop="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
-    <com.github.aakira.expandablelayout.ExpandableLinearLayout
-        android:id="@+id/expandableLinearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:layout_constraintVertical_bias="0.125">
-
+        app:layout_constraintTop_toBottomOf="@+id/divider">
         <android.support.v7.widget.ListViewCompat
             android:id="@+id/options_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+            android:layout_height="wrap_content" />
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
 </android.support.constraint.ConstraintLayout>

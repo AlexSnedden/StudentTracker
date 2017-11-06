@@ -10,25 +10,21 @@ import org.joda.time.LocalDate;
 
 import java.sql.Timestamp;
 
-import io.paperdb.Paper;
-
-import static net.pinaz993.studenttracker.MyApplication.dbHandler;
-
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
  * This package is for the Student Object, and all related objects.
  * The student object holds information about the student, and is responsible for keeping track of all
  * records pertaining to the student, such as behavior and attendance.
- * <p>
+ *
  * The student is stored using the Paper library by pilgr. A static method is provided to retrieve
  * the object from storage. Each student object is responsible for saving itself to storage when
  * told.
- * <p>
+ *
  * When data needs to be recorded about the student, the object records this data in an SQL database
  * on the device. All student records share the same database. Each record is accompanied by a
  * Student ID string, a Class ID string, and a timestamp.
- * <p>
+ *
  * If a record needs to be edited, the object will query for the record and update it. It will also
  * be able to delete records.
  */
@@ -41,16 +37,10 @@ public class Student {
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
 
-
-    public static Student retrieve(String studentID) {
-        return Paper.book(BOOK_ID).read(studentID);
-    }
-
     //<editor-fold desc="Constructors">
 
     /**
      * Constructor with email address
-     *
      * @param firstName First name of student
      * @param lastName  Last name of student
      * @param email     Email of the student, can be null
@@ -66,7 +56,6 @@ public class Student {
 
     /**
      * Constructor with no email address
-     *
      * @param firstName First name of student
      * @param lastName  Last name of Student
      * @param studentID A value unique to each student. Will be used as a primary key
@@ -81,7 +70,6 @@ public class Student {
     //</editor-fold>
 
     //<editor-fold desc="Attendance Record Handling">
-
     /**
      * Record attendance with the following values:
      *
@@ -178,18 +166,6 @@ public class Student {
         return false;
     }
 
-    /**
-     * Saves the student to the student database. Anything that shouldn't be saved needs to be marked
-     * as transient, such as an attendance summary.
-     */
-    public void save() {
-        if(dbHandler.studentExists(studentID)) {
-            dbHandler.updateStudent(studentID, firstName, lastName, email);
-        } else {
-            dbHandler.recordStudent(studentID, firstName, lastName, email);
-        }
-    }
-
     public AttendanceSummary compileAttendanceSummery() {
         //TODO: Implement Student.compileAttendanceSummery()
 
@@ -202,7 +178,6 @@ public class Student {
 
 
     //<editor-fold desc="BehaviorHandler Record Handling">
-
     /**
      * Record a notable instance of a behavior with the following information:
      *

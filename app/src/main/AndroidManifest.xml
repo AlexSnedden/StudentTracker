@@ -18,7 +18,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Temp" />
-        <activity android:name=".CollapseTest"></activity>
     </application>
 
 </manifest>
