@@ -71,7 +71,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
         final Student student = (Student) getItem(position);
         if (student != null) {
-            binderHelper.bind(holder.swipe, student.getStudentID());
+            binderHelper.bind(holder.swipe, student.getID());
             //Set click handlers
             holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
