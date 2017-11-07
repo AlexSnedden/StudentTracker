@@ -25,22 +25,22 @@
             android:theme="@style/AppTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textOff="@string/excusedTxt"
-            android:textOn="@string/excusedTxt"/>
+            android:textOff="@string/excused_txt"
+            android:textOn="@string/excused_txt"/>
 
         <ToggleButton
             android:id="@+id/earlyDepartureBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textOff="@string/earlyDepartureTxt"
-            android:textOn="@string/earlyDepartureTxt" />
+            android:textOff="@string/early_departure_txt"
+            android:textOn="@string/early_departure_txt" />
 
         <ToggleButton
             android:id="@+id/lateArrivalBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textOff="@string/lateArrivalTxt"
-            android:textOn="@string/lateArrivalTxt" />
+            android:textOff="@string/late_arrival_txt"
+            android:textOn="@string/late_arrival_txt" />
     </LinearLayout>
 
     <!--Top Layout-->
@@ -59,7 +59,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight=".15"
             android:gravity="center_vertical"
-            android:text="@string/invalidStudentTxt"
+            android:text="@string/invalid_student_txt"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
 

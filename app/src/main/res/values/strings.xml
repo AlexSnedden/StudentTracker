@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Student Tracker</string>
-    <string name="behaviorPrompt">Choose a Behavior</string>
-    <string-array name="behaviorsPositive">
+    <string name="behavior_prompt">Choose a Behavior</string>
+    <string-array name="behaviors_positive">
         <item>Well Prepared</item>
         <item>Quality Contribution</item>
         <item>Positive Attitude</item>
@@ -11,7 +11,7 @@
         <item>Motivated Others</item>
         <item>Participated in Class Discussion</item>
     </string-array>
-    <string-array name="behaviorsNegative">
+    <string-array name="behaviors_negative">
         <item>Sleeping</item>
         <item>Using Phone</item>
         <item>Talking</item>
@@ -24,10 +24,10 @@
         <item>Arrogant</item>
     </string-array>
 
-    <string name="lateArrivalTxt">Late\nArrival</string>
-    <string name="earlyDepartureTxt">Early\nDeparture</string>
-    <string name="invalidStudentTxt">Invalid Student</string>
-    <string name="excusedTxt">Excused</string>
+    <string name="late_arrival_txt">Late\nArrival</string>
+    <string name="early_departure_txt">Early\nDeparture</string>
+    <string name="invalid_student_txt">Invalid Student</string>
+    <string name="excused_txt">Excused</string>
 
 
     <string name="title_activity_collapse_test">CollapseTest</string>
