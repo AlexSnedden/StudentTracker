@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Student Tracker</string>
-    <string name="behaviorPrompt">Choose a Behavior</string>
-    <string-array name="behaviorsPositive">
+    <string name="behavior_prompt">Choose a Behavior</string>
+    <string-array name="behaviors_positive">
         <item>Well Prepared</item>
         <item>Quality Contribution</item>
         <item>Positive Attitude</item>
@@ -11,7 +11,7 @@
         <item>Motivated Others</item>
         <item>Participated in Class Discussion</item>
     </string-array>
-    <string-array name="behaviorsNegative">
+    <string-array name="behaviors_negative">
         <item>Sleeping</item>
         <item>Using Phone</item>
         <item>Talking</item>
@@ -24,13 +24,10 @@
         <item>Arrogant</item>
     </string-array>
 
-    <string name="lateArrivalTxt">Late\nArrival</string>
-    <string name="earlyDepartureTxt">Early\nDeparture</string>
-    <string name="invalidStudentTxt">Invalid Student</string>
-    <string name="excusedTxt">Excused</string>
-
-
-    <string name="title_activity_collapse_test">CollapseTest</string>
+    <string name="late_arrival_txt">Late\nArrival</string>
+    <string name="early_departure_txt">Early\nDeparture</string>
+    <string name="invalid_student_txt">Invalid Student</string>
+    <string name="excused_txt">Excused</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -39,7 +36,7 @@
         "technologically advanced and open to imagination and magic.\n"
         "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
         "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
+        "flexibility of the material creates new affordances that supersede those in the physical "
         "world, without breaking the rules of physics.\n"
         "The fundamentals of light, surface, and movement are key to conveying how objects move, "
         "interact, and exist in space and in relation to each other. Realistic lighting shows "
@@ -62,7 +59,7 @@
         "All action takes place in a single environment. Objects are presented to the user without "
         "breaking the continuity of experience even as they transform and reorganize.\n"
         "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
+        "Feedback is subtle yet clear. Transitions are efficient yet coherent.\n\n"
 
         "3D world.\n\n"
 
@@ -121,7 +118,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="behavior_negative">Negetive</string>
+    <string name="behavior_negative">Negative</string>
     <string name="behavior_neutral">Neutral</string>
     <string name="behavior_positive">Positive</string>
 </resources>
