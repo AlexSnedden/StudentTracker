@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * Stores a list of student objects so that they can be rendered on screen in a list of
+ * StudentPanes.
  * Created by Patrick Shannon on 8/30/2017.
  */
 

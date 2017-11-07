@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Temp" />
-        <activity android:name=".CollapseTest"></activity>
+        <activity android:name=".CollapseTest" />
+        <activity android:name=".ClassListActivity"></activity>
     </application>
 
 </manifest>

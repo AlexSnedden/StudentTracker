@@ -11,7 +11,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent redirect = new Intent(MainActivity.this, CollapseTest.class);
+        Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
         startActivity(redirect);
 
 
