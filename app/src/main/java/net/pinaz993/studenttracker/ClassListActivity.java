@@ -8,6 +8,7 @@ import android.widget.Button;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 public class ClassListActivity extends AppCompatActivity {
+    String classID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,5 +22,7 @@ public class ClassListActivity extends AppCompatActivity {
                 optionContainer.toggle(true);
             }
         });
+        Bundle b = getIntent().getExtras();
+        classID = (b != null) ? b.getString("classID") : null;
     }
 }
