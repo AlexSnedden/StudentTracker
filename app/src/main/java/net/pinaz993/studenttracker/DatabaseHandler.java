@@ -21,42 +21,35 @@ import java.util.concurrent.ExecutionException;
 
 public class DatabaseHandler extends SQLiteOpenHelper{
 
+    public static DatabaseHandler instance = null;
+
     public static final String DATABASE_NAME = "StudentTracking.db";
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
     private SQLiteDatabase db;
-    private Context context;
-    private AsyncTask task;
+    private AsyncDatabaseFetcher task;
 
-    //<editor-fold desc="Constructors and init()">
+    public static DatabaseHandler getInstance() {
+        return instance;
+        // The dirty deed is done. DatabaseHandler is now a demi-singleton.
+        }
+
+    //<editor-fold desc="Constructors">
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-        this.context = context;
-        
-        init();
+        String EXCEPTION_MESSAGE = "Application tried to instantiate a second DatabaseHandler instance.";
+        if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
+        instance = this; // UGH! This is even dirtier than a singleton!
     }
 
-    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory,
+    private DatabaseHandler(@Nullable SQLiteDatabase.CursorFactory factory,
                            DatabaseErrorHandler errorHandler) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
-        this.context = context;
-        init();
-    }
-
-    public void init() {
+        super(null, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
     }
     //</editor-fold>
 
     //<editor-fold desc="Send For and then Grab DB">
     public void sendForDB() {
-        task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] dbh) {
-                return null;
-            }
-            protected SQLiteDatabase doInBackground(DatabaseHandler dbh) {
-                return dbh.getWritableDatabase();
-            }
-        };
+        task = new AsyncDatabaseFetcher();
         task.execute(this);
     }
 
@@ -405,7 +398,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public void removeStudentfromAllClasses(String studentID){
         String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ?";
-        db.delete(StudentClassMappingTableSchema.NAME, where,new String[]{studentID});
+        db.delete(StudentClassMappingTableSchema.NAME, where, new String[]{studentID});
     }
 
     public boolean studentInClass(String studentID, String classID){
@@ -422,7 +415,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         String where = StudentClassMappingTableSchema.CLASS_ID_COL + " = ?";
         return db.query(StudentClassMappingTableSchema.NAME,
                 new String[]{StudentClassMappingTableSchema.STUDENT_ID_COL}, where,
-                new String[]{classID}, null, null, null);
+                new String[]{classID}, null, null,
+                StudentClassMappingTableSchema.STUDENT_ID_COL);
     }
 
     public Cursor getClassesForStudent(String studentID){
@@ -430,6 +424,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return db.query(StudentClassMappingTableSchema.NAME,
                 new String[]{StudentClassMappingTableSchema.CLASS_ID_COL}, where,
                 new String[]{studentID}, null, null, null);
+    }
+
+    public Cursor getAllClasses () {
+        return db.query(StudentClassMappingTableSchema.NAME,
+                new String[]{StudentClassMappingTableSchema.CLASS_ID_COL},
+                null, null, null, null,
+                StudentClassMappingTableSchema.CLASS_ID_COL);
     }
     //</editor-fold>
 
@@ -485,7 +486,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String EXCUSED_COL = "excused";
     }
 
-    private static class StudentClassMappingTableSchema{
+    public static class StudentClassMappingTableSchema{
         public static final String NAME = "StudentClassMap";
 
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
@@ -511,4 +512,22 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String EMAIL_COL = "email";
     }
     //</editor-fold>
+
+    private static class AsyncDatabaseFetcher extends AsyncTask{
+
+        /**
+         * There, you happy now, compiler?
+         *
+         * @param objects Thing to do stuff to.
+         * @return Stuff with things done to it.
+         */
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            return null;
+        }
+
+        protected SQLiteDatabase doInBackground(DatabaseHandler dbh) {
+            return dbh.getWritableDatabase();
+        }
+    }
 }
