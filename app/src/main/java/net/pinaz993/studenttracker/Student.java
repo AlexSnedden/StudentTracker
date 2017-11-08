@@ -1,12 +1,6 @@
 package net.pinaz993.studenttracker;
-import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.Nullable;
 
-import org.joda.time.Duration;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
+import android.support.annotation.Nullable;
 
 import java.sql.Timestamp;
 
@@ -30,12 +24,10 @@ import java.sql.Timestamp;
  */
 
 public class Student {
-    private final static String BOOK_ID = "students";
     private final String firstName;
     private final String lastName;
     private final String email;
     private final String studentID;
-    private boolean delinquent; // condition for read formatting on the student's name
 
     //<editor-fold desc="Constructors">
 
@@ -107,10 +99,10 @@ public class Student {
      * @param earlyDeparture Did the student leave class early?
      * @param excused        Was the behavior excused?
      */
-    public void changeAttendance(String classID, AttendanceInterval interval,
+    public void updateAttendance(String classID, AttendanceInterval interval,
                                  boolean present, @Nullable boolean lateArrival,
                                  @Nullable boolean earlyDeparture, @Nullable boolean excused) {
-        //TODO: Implement Student.changeAttendance()
+        //TODO: Implement Student.updateAttendance()
 
         //If present is false, late arrival and early departure are automatically false
 
@@ -127,9 +119,9 @@ public class Student {
      * @param earlyDeparture Did the student leave class early?
      * @param excused        Was the behavior excused?
      */
-    public void changeRecentAttendance(String classID, boolean present, boolean lateArrival,
+    public void updateRecentAttendance(String classID, boolean present, boolean lateArrival,
                                        boolean earlyDeparture, boolean excused) {
-        //TODO: Implement Student.changeRecentAttendance()
+        //TODO: Implement Student.updateRecentAttendance()
 
         //Find the record (there should only be one) within the last attendance interval, and change
         //it. The attendance period is defined elsewhere, with a default of one day.
@@ -140,8 +132,8 @@ public class Student {
      *
      * @param classID The class the student was to attend
      */
-    public void resetAttendance(@Nullable String classID) {
-        //TODO: Implement Student.resetAttendance()
+    public void deleteAttendance(@Nullable String classID) {
+        //TODO: Implement Student.deleteAttendance()
 
         if (classID != null) {
             //delete all records for this student and that class ID.
@@ -204,10 +196,6 @@ public class Student {
     //</editor-fold>
 
     //<editor-fold desc="Setters and Getters">
-    public boolean isDelinquent() {
-        return delinquent;
-    }
-
     public String getFirstName() {
         return firstName;
     }

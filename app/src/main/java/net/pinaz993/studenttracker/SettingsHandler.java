@@ -7,7 +7,6 @@ import org.joda.time.Duration;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Handles the settings for the app. Uses SharedPreferences to do so.
@@ -15,11 +14,10 @@ import java.util.Set;
  */
 
 public class SettingsHandler {
-    public final Duration attendanceIntervalDuration;
-    protected boolean daily = false;
-    protected boolean weekly = false;
-
-    private final Context context;
+    private static SettingsHandler instance;
+    private final Duration attendanceIntervalDuration;
+    private boolean daily = false;
+    private boolean weekly = false;
     private final SharedPreferences.Editor editor;
     private final SharedPreferences settings;
 
@@ -31,7 +29,6 @@ public class SettingsHandler {
     private final String IS_FIRST_TIME_LAUNCH;
 
     public SettingsHandler(Context context) {
-        this.context = context;
         settings = context.getSharedPreferences(
                 context.getString(R.string.settings_key), Context.MODE_PRIVATE);
         editor = settings.edit();
@@ -59,12 +56,20 @@ public class SettingsHandler {
             editor.apply();
         }
         //</editor-fold>
+
+        String EXCEPTION_MESSAGE = "Application tried to instantiate a second SettingsHandler instance.";
+        if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
+        instance = this; // UGH! This is even dirtier than a singleton!
+    }
+
+    public static SettingsHandler getInstance() {
+        return instance;
     }
 
     public String[] getAttendanceModeChoices(){
         return new String[] {
-                context.getString(R.string.attendance_mode_daily),
-                context.getString(R.string.attendance_mode_weekly)
+                ATTENDANCE_MODE_DAILY,
+                ATTENDANCE_MODE_WEEKLY
         };
     }
 
@@ -84,5 +89,17 @@ public class SettingsHandler {
 
     public void setIsFirstTimeLaunch(boolean b){
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, b);
+    }
+
+    public boolean isDaily() {
+        return daily;
+    }
+
+    public boolean isWeekly() {
+        return weekly;
+    }
+
+    public Duration getAttendanceIntervalDuration() {
+        return attendanceIntervalDuration;
     }
 }

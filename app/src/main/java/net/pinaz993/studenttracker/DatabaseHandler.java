@@ -30,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public static DatabaseHandler getInstance() {
         return instance;
-        // The dirty deed is done. DatabaseHandler is now a demi-singleton.
+        // The dirty deed is done. DatabaseHandler is now a demi-github.singleton.
         }
 
     //<editor-fold desc="Constructors">

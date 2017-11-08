@@ -1,9 +1,7 @@
 package net.pinaz993.studenttracker;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +29,6 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
  */
 
 public class StudentPaneAdapter extends ArrayAdapter {
-
-
-    private Student student;
-
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
 
@@ -107,7 +101,6 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
         return convertView;
     }
-
 
     private void toggleAbsentPresent(boolean isChecked, Student student) {}
 
