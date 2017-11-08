@@ -31,4 +31,9 @@
     <string name="behaviorNegative">Negative</string>
     <string name="behaviorNeutral">Neutral</string>
     <string name="behaviorPositive">Positive</string>
+    <string name="attendance_mode_key">ATTENDANCE_INTERVAL</string>
+    <string name="settings_key">SETTINGS</string>
+    <string name="attendance_mode_daily">DAILY</string>
+    <string name="attendance_mode_weekly">WEEKLY</string>
+    <string name="is_first_time_launch">IS_FIRST_TIME_LAUNCH</string>
 </resources>
