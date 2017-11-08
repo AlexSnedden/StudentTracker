@@ -31,7 +31,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
         this.context = context;
-        
+
         init();
     }
 
@@ -72,11 +72,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createStudentTable = "CREATE TABLE " +
-            StudentTableSchema.NAME + " (" +
-            StudentTableSchema.STUDENT_ID_COL_DEF +
-            StudentTableSchema.FIRST_NAME_COL_DEF +
-            StudentTableSchema.LAST_NAME_COL_DEF +
-            StudentTableSchema.EMAIL_COL_DEF +")";
+                StudentTableSchema.NAME + " (" +
+                StudentTableSchema.STUDENT_ID_COL_DEF +
+                StudentTableSchema.FIRST_NAME_COL_DEF +
+                StudentTableSchema.LAST_NAME_COL_DEF +
+                StudentTableSchema.EMAIL_COL_DEF +")";
         db.execSQL(createStudentTable);
         String createStudentClassMappingTable = "CREATE TABLE " +
                 StudentClassMappingTableSchema.NAME + " (" +
@@ -141,7 +141,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     //<editor-fold desc="Student Record Handling">
     public void addStudent(String studentID, String firstName,
-                              String lastName, @Nullable String email) {
+                           String lastName, @Nullable String email) {
         ContentValues values = new ContentValues();
         values.put(StudentTableSchema.STUDENT_ID_COL, studentID);
         values.put(StudentTableSchema.FIRST_NAME_COL, firstName);
@@ -411,8 +411,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public boolean studentInClass(String studentID, String classID){
         String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ? AND " +
                 StudentClassMappingTableSchema.CLASS_ID_COL_DEF + " = ?";
-     Cursor c = db.query(StudentClassMappingTableSchema.NAME, null, where,
-             new String[]{studentID, classID},null, null, null);
+        Cursor c = db.query(StudentClassMappingTableSchema.NAME, null, where,
+                new String[]{studentID, classID},null, null, null);
         boolean rtnval = c.moveToFirst();
         c.close();
         return rtnval;
@@ -444,7 +444,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY (behaviorID, studentID, timestamp),"; //Why, yes, I do need all of these columns. Don't question me.
         public static final String BEHAVIOR_ID_ALIAS_DEF = "FOREIGN KEY(behaviorID) REFERENCES BehaviorAlias(behaviorID),";
         public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
-        
+
         public static final String BEHAVIOR_ID_COL = "behaviorID";
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";
@@ -462,7 +462,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String BEHAVIOR_NAME_COL = "behaviorName";
         public static final String POSITIVITY_COL = "positivity";
     }
-    
+
     private static class AttendanceRecordsTableSchema{
         public static final String NAME = "AttendanceRecords";
 
