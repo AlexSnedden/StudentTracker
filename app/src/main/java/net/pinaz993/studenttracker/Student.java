@@ -1,19 +1,10 @@
 package net.pinaz993.studenttracker;
-import android.app.Activity;
-import android.content.Context;
+
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 
-import org.joda.time.Duration;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-
 import java.sql.Timestamp;
-
-import io.paperdb.Paper;
-
-import static net.pinaz993.studenttracker.MyApplication.dbHandler;
-
 
 /**
  * Created by Patrick Shannon on 8/30/2017.
@@ -39,12 +30,7 @@ public class Student {
     private final String lastName;
     private final String email;
     private final String studentID;
-    private boolean delinquent; // condition for read formatting on the student's name
-
-
-    public static Student retrieve(String studentID) {
-        return Paper.book(BOOK_ID).read(studentID);
-    }
+    private final DatabaseHandler dbh = DatabaseHandler.getInstance();
 
     //<editor-fold desc="Constructors">
 
@@ -81,7 +67,6 @@ public class Student {
     //</editor-fold>
 
     //<editor-fold desc="Attendance Record Handling">
-
     /**
      * Record attendance with the following values:
      *
@@ -94,22 +79,15 @@ public class Student {
      *                       <p>
      *                       Can also be used to record attendance after the fact.
      */
-    public void recordAttendence(String classID, @Nullable AttendanceInterval interval,
+    public void recordAttendence(String classID, AttendanceInterval interval,
                                  boolean present, boolean lateArrival,
                                  boolean earlyDeparture, boolean excused) {
-        //TODO: Implement Student.recordAttendance()
-
-        //Table is already set up, so lets check the data
-        //If the timestamp is null, set it to now()
-
-        //If present is false, late arrival and early departure are automatically false
-
-        //Store it, using AttendanceInterval.getStart() in the timestamp column
-
+        dbh.recordAttendance(studentID, classID, interval.getStart().getMillis(),
+                present, lateArrival, earlyDeparture, excused);
     }
 
     /**
-     * Change a specified record of attendance. Specified by the following:
+     * Change a specified record of attendance. Assumes record already exists. Specified by the following:
      *
      * @param classID        The class the student was to attend
      * @param interval       Attendance interval in question.  Cannot be null
@@ -119,16 +97,26 @@ public class Student {
      * @param earlyDeparture Did the student leave class early?
      * @param excused        Was the behavior excused?
      */
-    public void changeAttendance(String classID, AttendanceInterval interval,
-                                 boolean present, @Nullable boolean lateArrival,
-                                 @Nullable boolean earlyDeparture, @Nullable boolean excused) {
-        //TODO: Implement Student.changeAttendance()
+    public void updateAttendance(String classID, AttendanceInterval interval,
+                                 @Nullable Boolean present, @Nullable Boolean lateArrival,
+                                 @Nullable Boolean earlyDeparture, @Nullable Boolean excused) {
+        Cursor c = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
+        c.moveToFirst();
+        //<editor-fold desc="Grab current values if params are null.">
+        if(present == null) present = c.getInt(c.getColumnIndex(
+                DatabaseHandler.AttendanceRecordsTableSchema.PRESENT_COL)) != 0;
 
-        //If present is false, late arrival and early departure are automatically false
+        if(lateArrival == null) lateArrival = c.getInt(c.getColumnIndex(
+                DatabaseHandler.AttendanceRecordsTableSchema.LATE_ARRIVAL_COL)) != 0;
 
-        //If any values are null, make sure they are not changed in the record
+        if(earlyDeparture == null) earlyDeparture = c.getInt(c.getColumnIndex(
+                DatabaseHandler.AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL)) != 0;
 
-        //Change it.
+        if(excused == null) excused = c.getInt(c.getColumnIndex(
+                DatabaseHandler.AttendanceRecordsTableSchema.EXCUSED_COL)) != 0;
+        //</editor-fold>
+        dbh.updateAttendanceRecord(this.studentID, classID, interval.getStart().getMillis(),
+                present, lateArrival, earlyDeparture, excused);
 
     }
 
@@ -139,27 +127,33 @@ public class Student {
      * @param earlyDeparture Did the student leave class early?
      * @param excused        Was the behavior excused?
      */
-    public void changeRecentAttendance(String classID, boolean present, boolean lateArrival,
+    public void updateRecentAttendance(String classID, boolean present, boolean lateArrival,
                                        boolean earlyDeparture, boolean excused) {
-        //TODO: Implement Student.changeRecentAttendance()
-
-        //Find the record (there should only be one) within the last attendance interval, and change
-        //it. The attendance period is defined elsewhere, with a default of one day.
+        updateAttendance(classID, AttendanceInterval.getCurrent(), present, lateArrival,
+                earlyDeparture, excused);
     }
 
     /**
-     * Deletes all record for this student, possibly for this student and a given class
-     *
-     * @param classID The class the student was to attend
+     * Deletes all record for this student, possibly for this student in ANY class.
      */
-    public void resetAttendance(@Nullable String classID) {
-        //TODO: Implement Student.resetAttendance()
+    public void deleteAttendance() {
+        Cursor c = dbh.getClassesForStudent(this.studentID);
 
-        if (classID != null) {
-            //delete all records for this student and that class ID.
-        } else {
-            //delete all attendance records for this student... period.
-        }
+    }
+
+    /**
+     * Deletes all attendance records for this student and the given class.
+     */
+    public void deleteAttendanceForClass(String classID) {
+        Cursor c = dbh.getAttendanceRecordsForStudentInClass(this.studentID, classID);
+        c.moveToFirst();
+        do {
+            long interval = c.getInt(c.getColumnIndex(
+                    DatabaseHandler.AttendanceRecordsTableSchema.INTERVAL_COL));
+            dbh.deleteAttendanceRecord(this.studentID, classID, interval);
+            interval = 0;
+        } while (c.moveToNext());
+
     }
 
     /**
@@ -171,35 +165,36 @@ public class Student {
      * @return Does the record exist?
      */
     public boolean attendanceRecordExists(String classID, AttendanceInterval interval) {
-        //TODO: Implement Student.RecordExists
-
-        //Query the database to find a record for this student with this class id and in that
-        //attendance interval
-        return false;
-    }
-
-    /**
-     * Saves the student to the student database. Anything that shouldn't be saved needs to be marked
-     * as transient, such as an attendance summary.
-     */
-    public void save() {
-        if(dbHandler.studentExists(studentID)) {
-            dbHandler.updateStudent(studentID, firstName, lastName, email);
-        } else {
-            dbHandler.recordStudent(studentID, firstName, lastName, email);
-        }
+        return dbh.attendanceRecordExists(this.studentID, classID, interval.getStart().getMillis());
     }
 
     public AttendanceSummary compileAttendanceSummery() {
-        //TODO: Implement Student.compileAttendanceSummery()
+        Cursor c = dbh.getAttendanceRecordsForStudent(this.studentID);
+        AttendanceSummary summary = new AttendanceSummary();
+        summary.totalRecords = c.getCount();
+        for (int i = 1; i < c.getCount(); i++) {
+            c.moveToPosition(i);
+            boolean present, lateArrival, earlyDeparture, excused;
+            present = c.getInt(c.getColumnIndex(
+                    DatabaseHandler.AttendanceRecordsTableSchema.PRESENT_COL)) != 0;
+            lateArrival = c.getInt(c.getColumnIndex(
+                    DatabaseHandler.AttendanceRecordsTableSchema.LATE_ARRIVAL_COL)) != 0;
+            earlyDeparture = c.getInt(c.getColumnIndex(
+                    DatabaseHandler.AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL)) != 0;
+            excused = c.getInt(c.getColumnIndex(
+                    DatabaseHandler.AttendanceRecordsTableSchema.EXCUSED_COL)) != 0;
 
-        //query the database gathering all records for the student.
-        //add up all days absent, days present, late arrivals, and early departures.
-        //for each category, note the number of these that are excused
-        return null;
+            if(present) summary.daysPresent ++;
+            else if(!excused) summary.absences ++;// Case: present is false and excused is false
+            else summary.excusedAbsences ++; // Case: present is false and excused is true
+            if(lateArrival && !excused) summary.lateArrivals ++;
+            if(lateArrival && excused) summary.excusedLateArrivals ++;
+            if(earlyDeparture && !excused) summary.earlyDepartures ++;
+            if(earlyDeparture && excused) summary.excusedEarlyDepartures ++;
+        }
+        return summary;
     }
     //</editor-fold>
-
 
     //<editor-fold desc="BehaviorHandler Record Handling">
 
@@ -261,21 +256,12 @@ public class Student {
      * TODO: Integrate with SQL Implementation of attendance records
      */
     private class AttendanceSummary {
-        int totalRecords, Absences, excusedAbsenses;
+        int totalRecords, absences, excusedAbsences;
         int daysPresent;
         int lateArrivals;
         int excusedLateArrivals;
         int earlyDepartures;
         int excusedEarlyDepartures;
     }
-
-
-    /**
-     * An object for storing an interval of attendance. Can be a week long, or a day long.
-     * This is used to make sure that there are never two records for the same attendance interval,
-     * classID and studentID in the database. A global setting determines the duration of the
-     * attendance interval, which is 24h, by default.
-     * All intervals must be alligned to some baseline, Sunday, January 1, 2017 by default.
-     */
 }
 
