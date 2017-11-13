@@ -37,17 +37,17 @@ public class SettingsHandler {
         ATTENDANCE_MODE_DEFAULT = ATTENDANCE_MODE_DAILY;
         ATTENDANCE_MODE_KEY = context.getString(R.string.attendance_mode_key);
         String attendanceMode = settings.getString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
-
         IS_FIRST_TIME_LAUNCH = context.getString(R.string.is_first_time_launch);
-
         //<editor-fold desc="Set Attendance Mode">
         if(Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_daily))) {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day
             daily = true;
+            weekly = false;
         }
         else if (Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_weekly))) {
             attendanceIntervalDuration = new Duration(604800000);
-            weekly = false;
+            weekly = true;
+            daily = false;
         }
         else {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day

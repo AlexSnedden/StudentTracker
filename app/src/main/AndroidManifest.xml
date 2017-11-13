@@ -19,6 +19,7 @@
         <activity android:name=".Temp" />
         <activity android:name=".CollapseTest" />
         <activity android:name=".ClassListActivity"></activity>
+        <activity android:name=".LoadingActivity" />
     </application>
 
 </manifest>
