@@ -40,10 +40,7 @@ public class ClassListActivity extends AppCompatActivity {
         if (classID == null) {
             // activate the class selector dialog, use it to return a valid classID
         }
-
         optionsList = (ListView) findViewById(R.id.options_list);
-
-
         Cursor c = dbh.getStudentsInClass(classID);
         students = new Student[c.getCount()];
         while (c.moveToNext()) {
@@ -52,9 +49,13 @@ public class ClassListActivity extends AppCompatActivity {
             students[c.getPosition()] = dbh.retrieveStudent(studentID);
         }
 
+
+
         studentPaneAdapter = new StudentPaneAdapter(this, students);
         studentList.setAdapter(studentPaneAdapter);
         c.close();
+        settings.setLastActivityRun(SettingsHandler.ACTIVITY.CLASS_LIST);
+        settings.setLastClassID(classID);
     }
 
     public void toggleMenu(){

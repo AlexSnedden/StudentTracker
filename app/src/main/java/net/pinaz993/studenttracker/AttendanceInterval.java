@@ -9,35 +9,35 @@ public class AttendanceInterval{
     Duration duration;
     Instant start;
     Interval interval;
-    SettingsHandler settings;
+    private static SettingsHandler settings = SettingsHandler.getInstance();
 
-    static long getCurrentStart(SettingsHandler settings){
-        return getCurrent(settings).start.getMillis();
+    public static long getCurrentStart(){
+        return getCurrent().start.getMillis();
     }
 
-    static AttendanceInterval getCurrent(SettingsHandler settings) {
+    public static AttendanceInterval getCurrent() {
         Instant now = new Instant();
-        return getFromInstant(now,settings);
+        return getFromInstant(now);
     }
 
-    static AttendanceInterval getFromInstant(Instant then, SettingsHandler settings){
+    public static AttendanceInterval getFromInstant(Instant then){
         LocalDate now = then.toDateTime().toLocalDate();
         Instant newStart;
-        if (settings.weekly) {
+        if (settings.isWeekly()) {
             now = now.dayOfWeek().withMinimumValue();
             newStart = now.toDateTimeAtStartOfDay().toInstant();
-        } else if(settings.daily) {
+        } else if(settings.isDaily()) {
             newStart = now.toDateTimeAtStartOfDay().toInstant();
         } else {
             newStart = new Instant(0); //Shouldn't ever happen, but is easy to test for.
         }
-        return new AttendanceInterval(newStart, settings);
+        return new AttendanceInterval(newStart);
     }
 
     // To ensure proper alignment, all initializations will take place in static methods.
-    private AttendanceInterval(Instant start, SettingsHandler settings) {
+    private AttendanceInterval(Instant start) {
         this.start = start;
-        duration = settings.attendanceIntervalDuration;
+        duration = settings.getAttendanceIntervalDuration();
         interval = new Interval(start, duration);
     }
 

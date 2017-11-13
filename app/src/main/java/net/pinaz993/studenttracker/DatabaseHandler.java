@@ -24,6 +24,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static DatabaseHandler instance = null;
 
     public static final String DATABASE_NAME = "StudentTracking.db";
+    public static final String IS_THAT = " =?";
+    public static final String IS_THAT_AND = IS_THAT + " AND ";
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
     private SQLiteDatabase db;
     private AsyncDatabaseFetcher task;
@@ -144,7 +146,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public boolean studentExists(String studentID) {
-        String selectString = StudentTableSchema.STUDENT_ID_COL + " =?";
+        String selectString = StudentTableSchema.STUDENT_ID_COL + IS_THAT;
         Cursor c = db.query(StudentTableSchema.NAME,
                 new String[]{StudentTableSchema.STUDENT_ID_COL}, selectString,
                 new String[] {studentID}, null, null, null);
@@ -154,9 +156,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public Student retrieveStudent(String studentID) {
-        String selectString = " WHERE " + StudentTableSchema.STUDENT_ID_COL + " =?";
+        String where = " WHERE " + StudentTableSchema.STUDENT_ID_COL + IS_THAT;
         Cursor c = db.query(StudentTableSchema.NAME,
-                new String[]{StudentTableSchema.STUDENT_ID_COL}, selectString,
+                new String[]{StudentTableSchema.STUDENT_ID_COL}, where,
                 new String[] {studentID}, null, null, null);
         String firstName = c.getString(c.getColumnIndex(StudentTableSchema.FIRST_NAME_COL));
         String lastName = c.getString(c.getColumnIndex(StudentTableSchema.LAST_NAME_COL));
@@ -173,7 +175,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void updateStudent(String studentID, @Nullable String firstName,
                               @Nullable String lastName, @Nullable String email){
         ContentValues cv = new ContentValues();
-        String where = StudentTableSchema.STUDENT_ID_COL +" = ?";
+        String where = StudentTableSchema.STUDENT_ID_COL +IS_THAT;
         if(firstName != null) cv.put(StudentTableSchema.FIRST_NAME_COL, firstName);
         if(lastName != null) cv.put(StudentTableSchema.LAST_NAME_COL, lastName);
         if(email != null) cv.put(StudentTableSchema.EMAIL_COL, email);
@@ -181,7 +183,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public void deleteStudent(String studentID){
-        String where = StudentTableSchema.STUDENT_ID_COL + " = ?";
+        String where = StudentTableSchema.STUDENT_ID_COL + IS_THAT;
         db.delete(StudentTableSchema.NAME, where,new String[]{studentID});
     }
     //</editor-fold>
@@ -205,7 +207,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     /**
      * Uses the params provided to change a row in the table. Changes only the row where the
-     * studentID, classID, and period are the same.
+     * studentID, classID, and period are as specified.
      * @param studentID value for studentID. Doesn't change.
      * @param classID value for classID. Doesn't change.
      * @param period value for period. Doesn't change.
@@ -216,7 +218,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void updateAttendanceRecord(String studentID, String classID, long period, boolean present,
                                        boolean lateArrival, boolean earlyDeparture, boolean excused)
     {
-        ContentValues cVal = new ContentValues(6);
+        ContentValues cVal = new ContentValues(4);
         cVal.put(AttendanceRecordsTableSchema.PRESENT_COL, present);
         cVal.put(AttendanceRecordsTableSchema.LATE_ARRIVAL_COL, lateArrival);
         cVal.put(AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL, earlyDeparture);
@@ -243,14 +245,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      * @return a Cursor containing all the records collected
      */
     public Cursor getCurrentAttendanceRecordsForClass(String classID, SettingsHandler settings){
-        Long interval = AttendanceInterval.getCurrentStart(settings);
+        Long interval = AttendanceInterval.getCurrentStart();
         String[] colList ={AttendanceRecordsTableSchema.STUDENT_ID_COL,
                 AttendanceRecordsTableSchema.PRESENT_COL,
                 AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
                 AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
                 AttendanceRecordsTableSchema.EXCUSED_COL};
-        String where = AttendanceRecordsTableSchema.CLASS_ID_COL.concat(" IS ?") +
-                AttendanceRecordsTableSchema.INTERVAL_COL.concat(" IS ?");
+        String where = AttendanceRecordsTableSchema.CLASS_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.INTERVAL_COL + IS_THAT;
         String[] wheres = {classID, interval.toString()};
         return db.query(AttendanceRecordsTableSchema.NAME, colList, where, wheres, null, null,
                 AttendanceRecordsTableSchema.INTERVAL_COL, null);
@@ -267,9 +269,54 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
                 AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
                 AttendanceRecordsTableSchema.EXCUSED_COL};
-        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?";
-        return db.query(AttendanceRecordsTableSchema.NAME, colList, where,new String[] {studentID},
-                null, null, AttendanceRecordsTableSchema.INTERVAL_COL, null);
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + IS_THAT;
+        return db.query(AttendanceRecordsTableSchema.NAME, colList, where, new String[] {studentID},
+                null, null, AttendanceRecordsTableSchema.INTERVAL_COL);
+    }
+
+    /**
+     * Quries the database for all record that pertain to the given student and class.
+     * @return The resulting cursor, or null if no records are found.
+     */
+    public Cursor getAttendanceRecordsForStudentInClass(String studentID, String classID) {
+        String[] colList = {
+                AttendanceRecordsTableSchema.INTERVAL_COL,
+                AttendanceRecordsTableSchema.PRESENT_COL,
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
+                AttendanceRecordsTableSchema.EXCUSED_COL};
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.CLASS_ID_COL + IS_THAT;
+        String[] args = {studentID, classID};
+        Cursor c = db.query(AttendanceRecordsTableSchema.NAME, colList, where, args, null,
+                null, AttendanceRecordsTableSchema.INTERVAL_COL);
+        if(c.moveToFirst()) return c;
+        else return null;
+    }
+
+    /**
+     * Queries the database for (what should be the only) current student record for a specific class.
+     * Returns a the resulting Cursor, or null if the record does not exist.
+     * @param studentID The id of the student to query for
+     * @param classID The ID of the class ot query for
+     * @return A cursor holding the record, or null if the record doesn't exist.
+     */
+    public Cursor getCurrentAttendanceRecordForStudentInClass(String studentID, String classID){
+        long interval = AttendanceInterval.getCurrentStart();
+        String[] colList = {
+                AttendanceRecordsTableSchema.PRESENT_COL,
+                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL,
+                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL,
+                AttendanceRecordsTableSchema.EXCUSED_COL
+        };
+        String where = AttendanceRecordsTableSchema.STUDENT_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.CLASS_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.INTERVAL_COL + IS_THAT;
+        String[] args = {studentID, classID, Long.toString(interval)};
+        Cursor c = db.query(AttendanceRecordsTableSchema.NAME, colList, where, args,
+                null, null, null);
+        if (c.moveToFirst()) return c;
+        else return null;
     }
 
     /**
@@ -278,9 +325,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
      */
     public boolean attendanceRecordExists(String studentID, String classID, long interval) {
         String[] columns = { AttendanceRecordsTableSchema.EXCUSED_COL};
-        String selection = AttendanceRecordsTableSchema.STUDENT_ID_COL + " =?" +
-                AttendanceRecordsTableSchema.CLASS_ID_COL + " =?" +
-                AttendanceRecordsTableSchema.INTERVAL_COL + " =?";
+        String selection = AttendanceRecordsTableSchema.STUDENT_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.CLASS_ID_COL + IS_THAT_AND +
+                AttendanceRecordsTableSchema.INTERVAL_COL + IS_THAT;
         String[] selectionArgs = {studentID, classID, Long.toString(interval)};
         Cursor c = db.query(AttendanceRecordsTableSchema.NAME, columns, selection, selectionArgs,
                 null, null, null);
@@ -401,7 +448,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.delete(StudentClassMappingTableSchema.NAME, where, new String[]{studentID});
     }
 
-    public boolean studentInClass(String studentID, String classID){
+    public boolean isStudentInClass(String studentID, String classID){
         String where = StudentClassMappingTableSchema.STUDENT_ID_COL + " = ? AND " +
                 StudentClassMappingTableSchema.CLASS_ID_COL_DEF + " = ?";
      Cursor c = db.query(StudentClassMappingTableSchema.NAME, null, where,
@@ -432,10 +479,17 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 null, null, null, null,
                 StudentClassMappingTableSchema.CLASS_ID_COL);
     }
+
+    public Cursor getAllStudentsInClasses() {
+        return db.query(StudentClassMappingTableSchema.NAME,
+                new String[]{StudentClassMappingTableSchema.STUDENT_ID_COL},
+                null, null, null, null,
+                StudentClassMappingTableSchema.STUDENT_ID_COL);
+    }
     //</editor-fold>
 
     //<editor-fold desc="Schema Classes">
-    private static class BehaviorRecordTableSchema{
+    static class BehaviorRecordTableSchema{
         public static final String NAME = "BehaviorRecords";
 
         public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER NOT NULL,";
@@ -452,7 +506,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String TIMESTAMP_COL = "timestamp";
     }
 
-    private static class BehaviorAliasTableSchema{
+    static class BehaviorAliasTableSchema{
         public static final String NAME = "BehaviorAlias";
 
         public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER PRIMARY KEY AUTOINCREMENT,";
@@ -464,7 +518,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String POSITIVITY_COL = "positivity";
     }
     
-    private static class AttendanceRecordsTableSchema{
+    static class AttendanceRecordsTableSchema{
         public static final String NAME = "AttendanceRecords";
 
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
@@ -486,7 +540,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String EXCUSED_COL = "excused";
     }
 
-    public static class StudentClassMappingTableSchema{
+    static class StudentClassMappingTableSchema{
         public static final String NAME = "StudentClassMap";
 
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
@@ -498,7 +552,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String CLASS_ID_COL = "classID";
     }
 
-    private static class StudentTableSchema{
+    static class StudentTableSchema{
         public static final String NAME = "Students";
 
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT PRIMARY KEY,";

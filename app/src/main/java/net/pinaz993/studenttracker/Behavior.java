@@ -16,9 +16,9 @@ public class Behavior{
 
     public enum Positivity{
 
-        NEGATIVE (-1, Resources.getSystem().getString(R.string.behaviorNegative)),
-        NEUTRAL (0, Resources.getSystem().getString(R.string.behaviorNeutral)),
-        POSITIVE (1, Resources.getSystem().getString(R.string.behaviorPositive));
+        NEGATIVE (-1, Resources.getSystem().getString(R.string.behavior_negative)),
+        NEUTRAL (0, Resources.getSystem().getString(R.string.behavior_neutral)),
+        POSITIVE (1, Resources.getSystem().getString(R.string.behavior_positive));
 
         public final int value;
         private String name;

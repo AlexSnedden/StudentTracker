@@ -17,5 +17,6 @@ public class ClassMenuAdapter extends ArrayAdapter {
      */
     public ClassMenuAdapter(@NonNull Context context, int resource) {
         super(context, resource);
+
     }
 }

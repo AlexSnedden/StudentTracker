@@ -28,7 +28,7 @@ public class SettingsHandler {
 
     private final String IS_FIRST_TIME_LAUNCH;
 
-    private enum  ACTIVITY {
+    public enum  ACTIVITY {
         CLASS_LIST,
         STUDENT_STATS,
         NONE,
@@ -52,6 +52,7 @@ public class SettingsHandler {
         ATTENDANCE_MODE_KEY = context.getString(R.string.attendance_mode_key);
         String attendanceMode = settings.getString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
         IS_FIRST_TIME_LAUNCH = context.getString(R.string.is_first_time_launch);
+
         //<editor-fold desc="Set Attendance Mode">
         if(Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_daily))) {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day
