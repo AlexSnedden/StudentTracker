@@ -28,6 +28,20 @@ public class SettingsHandler {
 
     private final String IS_FIRST_TIME_LAUNCH;
 
+    private enum  ACTIVITY {
+        CLASS_LIST,
+        STUDENT_STATS,
+        NONE,
+        SETTINGS,
+        CLASS_EDITOR,
+        IMPORT_DATA,
+        EXPORT_DATA
+    }
+    private ACTIVITY lastActivityRun;
+
+    private String lastClassID;
+    private String lastStudentID;
+
     public SettingsHandler(Context context) {
         settings = context.getSharedPreferences(
                 context.getString(R.string.settings_key), Context.MODE_PRIVATE);
@@ -45,13 +59,14 @@ public class SettingsHandler {
             weekly = false;
         }
         else if (Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_weekly))) {
-            attendanceIntervalDuration = new Duration(604800000);
+            attendanceIntervalDuration = new Duration(604800000); // Number of milliseconds in a week.
             weekly = true;
             daily = false;
         }
         else {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day
             daily = true;
+            weekly = false;
             editor.putString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
             editor.apply();
         }
@@ -101,5 +116,29 @@ public class SettingsHandler {
 
     public Duration getAttendanceIntervalDuration() {
         return attendanceIntervalDuration;
+    }
+
+    public ACTIVITY getLastActivityRun() {
+        return lastActivityRun;
+    }
+
+    public void setLastActivityRun(ACTIVITY lastActivityRun) {
+        this.lastActivityRun = lastActivityRun;
+    }
+
+    public String getLastClassID() {
+        return lastClassID;
+    }
+
+    public void setLastClassID(String lastClassID) {
+        this.lastClassID = lastClassID;
+    }
+
+    public String getLastStudentID() {
+        return lastStudentID;
+    }
+
+    public void setLastStudentID(String lastStudentID) {
+        this.lastStudentID = lastStudentID;
     }
 }
