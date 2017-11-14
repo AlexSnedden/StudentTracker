@@ -42,6 +42,7 @@ public class BehaviorListBox extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Implement onCLick for negative button
+                BehaviorListBox.this.getDialog().cancel();
             }
         });
 
