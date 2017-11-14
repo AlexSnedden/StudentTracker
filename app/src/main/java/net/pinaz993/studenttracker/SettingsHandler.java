@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import org.joda.time.Duration;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -15,7 +15,8 @@ import java.util.Objects;
 
 public class SettingsHandler {
     private static SettingsHandler instance;
-    private final Duration attendanceIntervalDuration;
+    private final String attendanceMode;
+    private Duration attendanceIntervalDuration;
     private boolean daily = false;
     private boolean weekly = false;
     private final SharedPreferences.Editor editor;
@@ -26,17 +27,20 @@ public class SettingsHandler {
     private final String ATTENDANCE_MODE_DEFAULT;
     private final String ATTENDANCE_MODE_KEY;
 
+    private final String LAST_ACTIVITY_RUN_KEY;
+    private final String LAST_CLASS_ID_KEY;
+    private final String LAST_STUDENT_ID_KEY;
+
     private final String IS_FIRST_TIME_LAUNCH;
 
     public enum  ACTIVITY {
-        CLASS_LIST,
-        STUDENT_STATS,
         NONE,
         SETTINGS,
-        CLASS_EDITOR,
-        IMPORT_DATA,
-        EXPORT_DATA
+        CLASS_LIST,
+        STUDENT_STATS,
+        CLASS_EDITOR
     }
+
     private ACTIVITY lastActivityRun;
 
     private String lastClassID;
@@ -50,10 +54,40 @@ public class SettingsHandler {
         ATTENDANCE_MODE_WEEKLY = context.getString(R.string.attendance_mode_weekly);
         ATTENDANCE_MODE_DEFAULT = ATTENDANCE_MODE_DAILY;
         ATTENDANCE_MODE_KEY = context.getString(R.string.attendance_mode_key);
-        String attendanceMode = settings.getString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
         IS_FIRST_TIME_LAUNCH = context.getString(R.string.is_first_time_launch);
+        LAST_ACTIVITY_RUN_KEY = context.getString(R.string.last_activity_run);
+        LAST_CLASS_ID_KEY = context.getString(R.string.last_class_id);
+        LAST_STUDENT_ID_KEY = context.getString(R.string.last_student_id);
 
-        //<editor-fold desc="Set Attendance Mode">
+        attendanceMode = settings.getString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
+        setAttendanceIntervalDuration(context);
+
+        String EXCEPTION_MESSAGE = "Application tried to instantiate a second SettingsHandler instance.";
+        if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
+        instance = this; // UGH! This is even dirtier than a singleton!
+    }
+
+    public static SettingsHandler getInstance() {
+        return instance;
+    }
+
+    public ArrayList<String> getAttendanceModeChoices(){
+        ArrayList r =  new ArrayList<String>();
+         r.add(ATTENDANCE_MODE_DAILY);
+         r.add(ATTENDANCE_MODE_WEEKLY);
+         return r;
+    }
+
+    public void setAttendanceMode(String s){
+        if(getAttendanceModeChoices().contains(s)) {
+            editor.putString(ATTENDANCE_MODE_KEY, s);
+        }
+        else {
+            editor.putString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
+        }
+    }
+
+    public void setAttendanceIntervalDuration(Context context) {
         if(Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_daily))) {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day
             daily = true;
@@ -70,31 +104,6 @@ public class SettingsHandler {
             weekly = false;
             editor.putString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
             editor.apply();
-        }
-        //</editor-fold>
-
-        String EXCEPTION_MESSAGE = "Application tried to instantiate a second SettingsHandler instance.";
-        if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
-        instance = this; // UGH! This is even dirtier than a singleton!
-    }
-
-    public static SettingsHandler getInstance() {
-        return instance;
-    }
-
-    public String[] getAttendanceModeChoices(){
-        return new String[] {
-                ATTENDANCE_MODE_DAILY,
-                ATTENDANCE_MODE_WEEKLY
-        };
-    }
-
-    public void setAttendanceMode(String s){
-        if(Arrays.asList(ATTENDANCE_MODE_DAILY, ATTENDANCE_MODE_WEEKLY).contains(s)) {
-            editor.putString(ATTENDANCE_MODE_KEY, s);
-        }
-        else {
-            editor.putString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
         }
     }
 
@@ -120,26 +129,26 @@ public class SettingsHandler {
     }
 
     public ACTIVITY getLastActivityRun() {
-        return lastActivityRun;
+        return ACTIVITY.values()[settings.getInt(LAST_ACTIVITY_RUN_KEY, 0)];
     }
 
     public void setLastActivityRun(ACTIVITY lastActivityRun) {
-        this.lastActivityRun = lastActivityRun;
+        editor.putInt(LAST_ACTIVITY_RUN_KEY, lastActivityRun.ordinal());
     }
 
     public String getLastClassID() {
-        return lastClassID;
+        return settings.getString(LAST_CLASS_ID_KEY, "");
     }
 
     public void setLastClassID(String lastClassID) {
-        this.lastClassID = lastClassID;
+        editor.putString(LAST_CLASS_ID_KEY, lastClassID);
     }
 
     public String getLastStudentID() {
-        return lastStudentID;
+        return settings.getString(LAST_STUDENT_ID_KEY, "");
     }
 
     public void setLastStudentID(String lastStudentID) {
-        this.lastStudentID = lastStudentID;
+        editor.putString(LAST_STUDENT_ID_KEY, lastStudentID);
     }
 }

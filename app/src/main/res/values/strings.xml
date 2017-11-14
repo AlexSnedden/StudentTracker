@@ -126,4 +126,9 @@
     <string name="attendance_mode_daily">DAILY</string>
     <string name="attendance_mode_weekly">WEEKLY</string>
     <string name="is_first_time_launch">IS_FIRST_TIME_LAUNCH</string>
+    <string name="last_activity_run">LAST_ACTIVITY_RUN</string>
+    <string name="last_class_id">LAST_CLASS_ID</string>
+    <string name="last_student_id">LAST_STUDENT_ID</string>
+    <string name="class_id_key">CLASS_ID</string>
+    <string name="student_id_key">STUDENT_ID</string>
 </resources>

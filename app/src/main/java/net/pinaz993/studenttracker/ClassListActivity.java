@@ -33,10 +33,10 @@ public class ClassListActivity extends AppCompatActivity {
             }
         });
 
-        Bundle b = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
         studentList = (ListView) findViewById(R.id.student_list);
 
-        classID = (b != null) ? b.getString("classID") : null;
+        classID = (extras != null) ? extras.getString("CLASS_ID") : null;
         if (classID == null) {
             // activate the class selector dialog, use it to return a valid classID
         }
