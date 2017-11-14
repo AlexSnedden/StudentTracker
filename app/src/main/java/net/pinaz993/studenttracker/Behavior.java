@@ -14,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 
 public class Behavior{
 
+    public boolean checked;
+
     public enum Positivity{
 
         NEGATIVE (-1, Resources.getSystem().getString(R.string.behavior_negative)),
@@ -52,6 +54,7 @@ public class Behavior{
         this.behaviorName = behaviorName;
         this.behaviorPositivity = behaviorPositivity;
         this.context = context;
+        this.checked = false;
     }
 
     @Override

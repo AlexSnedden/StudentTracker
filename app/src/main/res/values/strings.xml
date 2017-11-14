@@ -131,4 +131,5 @@
     <string name="last_student_id">LAST_STUDENT_ID</string>
     <string name="class_id_key">CLASS_ID</string>
     <string name="student_id_key">STUDENT_ID</string>
+    <string name="behavior_box_title" type="id">Choose Behavior(s) to Record:</string>
 </resources>

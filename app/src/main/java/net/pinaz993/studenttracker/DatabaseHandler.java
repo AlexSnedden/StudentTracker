@@ -510,11 +510,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String NAME = "BehaviorAlias";
 
         public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER PRIMARY KEY AUTOINCREMENT,";
-        public static final String BEHAVIOR_NAME_COL_DEF = "behaviorName TEXT,";
+        public static final String BEHAVIOR_NAME_COL_DEF = "behaviorNameTxt TEXT,";
         public static final String POSITIVITY_COL_DEF = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1));";
 
         public static final String BEHAVIOR_ID_COL = "behaviorID";
-        public static final String BEHAVIOR_NAME_COL = "behaviorName";
+        public static final String BEHAVIOR_NAME_COL = "behaviorNameTxt";
         public static final String POSITIVITY_COL = "positivity";
     }
     

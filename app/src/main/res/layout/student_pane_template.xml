@@ -5,6 +5,7 @@
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:longClickable="true"
     app:dragEdge="right"
     tools:context="net.pinaz993.studenttracker.StudentPaneAdapter">
 

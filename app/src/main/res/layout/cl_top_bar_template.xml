@@ -62,10 +62,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <View
+            <Space
                 android:id="@+id/divider"
                 style="@style/Divider"
-                android:layout_marginTop="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
