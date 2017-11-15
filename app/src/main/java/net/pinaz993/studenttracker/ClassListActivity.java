@@ -24,7 +24,7 @@ public class ClassListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_list);
-        final ExpandableLayout optionContainer = (ExpandableLayout) findViewById(R.id.option_container);
+        optionContainer = (ExpandableLayout) findViewById(R.id.option_container);
 
         Button dropMenuBtn = (Button) findViewById(R.id.drop_menu_btn);
         dropMenuBtn.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +37,7 @@ public class ClassListActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         studentList = (ListView) findViewById(R.id.student_list);
 
-        classID = (extras != null) ? extras.getString("CLASS_ID") : null;
+        classID = (extras != null) ? extras.getString("CLASS_ID_KEY") : null;
         if (classID == null) {
             // activate the class selector dialog, use it to return a valid classID
         }

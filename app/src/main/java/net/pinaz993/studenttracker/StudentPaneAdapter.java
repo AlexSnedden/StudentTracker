@@ -28,7 +28,7 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
  * Created by Patrick Shannon on 9/20/2017.
  */
 
-public class StudentPaneAdapter extends ArrayAdapter {
+public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.BehaviorDialogListener {
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
 
@@ -109,6 +109,11 @@ public class StudentPaneAdapter extends ArrayAdapter {
     private void toggleEarlyDeparture(boolean isChecked, Student student) {}
 
     private void toggleExcused(boolean isChecked, Student student) {}
+
+    @Override
+    public void onDialogPositiveClick(BehaviorDialog dialog) {
+        Behavior[] selectedBehaviors = dialog.collectResults();
+    }
 
     private class ViewHolder {
         LinearLayout bottomLayout;

@@ -61,6 +61,12 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         } catch (InterruptedException | ExecutionException e) {
             Log.d("DB_ERROR", "The database could not be retrieved.", e);
         }
+
+        Log.d("DB", db.toString());
+    }
+
+    public void getDatabaseManually(){
+        db = getWritableDatabase();
     }
     //</editor-fold>
 
@@ -141,7 +147,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         values.put(StudentTableSchema.STUDENT_ID_COL, studentID);
         values.put(StudentTableSchema.FIRST_NAME_COL, firstName);
         values.put(StudentTableSchema.LAST_NAME_COL, lastName);
-        values.put(StudentTableSchema.EMAIL_COL, email);
+        if(email!=null) values.put(StudentTableSchema.EMAIL_COL, email);
         db.insert(StudentTableSchema.NAME, null, values);
     }
 
@@ -156,10 +162,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public Student retrieveStudent(String studentID) {
-        String where = " WHERE " + StudentTableSchema.STUDENT_ID_COL + IS_THAT;
-        Cursor c = db.query(StudentTableSchema.NAME,
-                new String[]{StudentTableSchema.STUDENT_ID_COL}, where,
-                new String[] {studentID}, null, null, null);
+        String where = StudentTableSchema.STUDENT_ID_COL + IS_THAT;
+        String[] colList = new String[] {StudentTableSchema.STUDENT_ID_COL,
+                StudentTableSchema.FIRST_NAME_COL,
+                StudentTableSchema.LAST_NAME_COL,
+                StudentTableSchema.EMAIL_COL};
+        Cursor c = db.query(StudentTableSchema.NAME, null, where, new String[] {studentID},
+                null, null, null);
+        c.moveToFirst();
         String firstName = c.getString(c.getColumnIndex(StudentTableSchema.FIRST_NAME_COL));
         String lastName = c.getString(c.getColumnIndex(StudentTableSchema.LAST_NAME_COL));
         String email;
@@ -498,7 +508,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String TIMESTAMP_COL_DEF = "timestamp INTEGER NOT NULL,"; //use something that returns UNIX time in milliseconds
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY (behaviorID, studentID, timestamp),"; //Why, yes, I do need all of these columns. Don't question me.
         public static final String BEHAVIOR_ID_ALIAS_DEF = "FOREIGN KEY(behaviorID) REFERENCES BehaviorAlias(behaviorID),";
-        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID)";
         
         public static final String BEHAVIOR_ID_COL = "behaviorID";
         public static final String STUDENT_ID_COL = "studentID";
@@ -511,7 +521,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         public static final String BEHAVIOR_ID_COL_DEF = "behaviorID INTEGER PRIMARY KEY AUTOINCREMENT,";
         public static final String BEHAVIOR_NAME_COL_DEF = "behaviorNameTxt TEXT,";
-        public static final String POSITIVITY_COL_DEF = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1));";
+        public static final String POSITIVITY_COL_DEF = "positivity INTEGER DEFAULT 0 CHECK(positivity IN(-1,0,1))";
 
         public static final String BEHAVIOR_ID_COL = "behaviorID";
         public static final String BEHAVIOR_NAME_COL = "behaviorNameTxt";
@@ -528,8 +538,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String LATE_ARRIVAL_COL_DEF = "lateArrival INTEGER NOT NULL CHECK(lateArrival IN(0, 1) AND present IS 1),";
         public static final String EARLY_DEPARTURE_COL_DEF = "earlyDeparture INTEGER NOT NULL CHECK(earlyDeparture IN(0, 1) AND present IS 1),";
         public static final String EXCUSED_COL_DEF = "excused INTEGER NOT NULL CHECK(excused IN(0, 1)),";
-        public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID, period)";
-        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
+        public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID, interval)";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID)";
 
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";
@@ -546,7 +556,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         public static final String STUDENT_ID_COL_DEF = "studentID TEXT NOT NULL,";
         public static final String CLASS_ID_COL_DEF = "classID TEXT NOT NULL,";
         public static final String PRIMARY_KEY_DEF = "PRIMARY KEY(studentID, classID)";
-        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID);";
+        public static final String STUDENT_ID_FOREIGN_KEY_DEF = "FOREIGN KEY (studentID) REFERENCES Students(studentID)";
 
         public static final String STUDENT_ID_COL = "studentID";
         public static final String CLASS_ID_COL = "classID";

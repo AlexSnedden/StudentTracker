@@ -1,5 +1,7 @@
 package net.pinaz993.studenttracker;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -18,18 +20,43 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
+ * A dialog box that allows the user to select mutliple behaviors and record them for a single student.
+ * It uses a custom layout that segments the behaviors into positive, negative and neutral lists,
+ * each with unique formatting. A list will set itself as invisible if it has no options to present.
+ * When the OK button is pressed, each behavior is timestamped and recorded in the database. The
+ * cancel button closes the dialog box without doing anything.
  * Created by Patrick Shannon on 11/14/2017.
  */
 
-public class BehaviorListBox extends DialogFragment {
+public class BehaviorDialog extends DialogFragment {
+    private View content;
+    private BehaviorDialogListener listener;
+    ListView positiveBehaviorList, neutralBehaviorList, negativeBehaviorList;
+
+    public interface BehaviorDialogListener {
+        void onDialogPositiveClick(BehaviorDialog dialog);
+    }
+
+    @SuppressLint("InflateParams")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        content = inflater.inflate(R.layout.behavior_box_list_template, null);
+
+        try {
+            listener = (BehaviorDialogListener) activity;
+        } catch (ClassCastException e){
+            throw new ClassCastException(activity.toString() +
+                    " must implement BehaviorDialogListener");
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View content = inflater.inflate(R.layout.behavior_box_list_template, null);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.behavior_box_title);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -42,14 +69,14 @@ public class BehaviorListBox extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Implement onCLick for negative button
-                BehaviorListBox.this.getDialog().cancel();
+                BehaviorDialog.this.getDialog().cancel();
             }
         });
 
         builder.setView(content);
-        ListView positiveBehaviorList = content.findViewById(R.id.behaviors_positive),
-                neutralBehaviorList = content.findViewById(R.id.behaviors_neutral),
-                negativeBehaviorList = content.findViewById(R.id.behaviors_negetive);
+        positiveBehaviorList = content.findViewById(R.id.behaviors_positive);
+        neutralBehaviorList = content.findViewById(R.id.behaviors_neutral);
+        negativeBehaviorList = content.findViewById(R.id.behaviors_negetive);
 
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
@@ -65,19 +92,45 @@ public class BehaviorListBox extends DialogFragment {
         negativeBehaviorList.setOnItemClickListener(listener);
         neutralBehaviorList.setOnItemClickListener(listener);
 
-        positiveBehaviorList.setAdapter(new BehaviorAdapter(getActivity(), Behavior.Positivity.POSITIVE, positiveBehaviorList));
-        neutralBehaviorList.setAdapter(new BehaviorAdapter(getActivity(), Behavior.Positivity.NEUTRAL, neutralBehaviorList));
-        negativeBehaviorList.setAdapter(new BehaviorAdapter(getActivity(), Behavior.Positivity.NEGATIVE, negativeBehaviorList));
+        positiveBehaviorList.setAdapter(
+                new BehaviorAdapter(getActivity(), Behavior.Positivity.POSITIVE, positiveBehaviorList));
+        neutralBehaviorList.setAdapter(
+                new BehaviorAdapter(getActivity(), Behavior.Positivity.NEUTRAL, neutralBehaviorList));
+        negativeBehaviorList.setAdapter(
+                new BehaviorAdapter(getActivity(), Behavior.Positivity.NEGATIVE, negativeBehaviorList));
 
         return builder.create();
     }
 
+    public Behavior[] collectResultsFromAdapter(Behavior[] appendBehaviors, BehaviorAdapter adapter){
+        ArrayList<Behavior> result = new ArrayList<Behavior>();
+        result.addAll(Arrays.asList(appendBehaviors));
+        result.addAll(Arrays.asList(adapter.getCheckedBehaviors()));
+        return result.toArray(new Behavior[]{});
+    }
 
+    public Behavior[] collectResults() {
+        Behavior[] results = new Behavior[]{};
+        results = collectResultsFromAdapter(results, (BehaviorAdapter)positiveBehaviorList.getAdapter());
+        results = collectResultsFromAdapter(results, (BehaviorAdapter)neutralBehaviorList.getAdapter());
+        results = collectResultsFromAdapter(results, (BehaviorAdapter)negativeBehaviorList.getAdapter());
+        return results;
+
+    }
 }
 
 class BehaviorAdapter extends ArrayAdapter{
     Context context;
     private static DatabaseHandler dbh = DatabaseHandler.getInstance();
+
+    public static Behavior[] collateBehaviorsByPositivity(Behavior.Positivity pos, Context context) {
+        Behavior[] b = dbh.getBehaviorObjects(context);
+        ArrayList<Behavior> rtn = new ArrayList<Behavior>();
+        for (Behavior aB : b) {
+            if (aB.behaviorPositivity == pos) rtn.add(aB);
+        }
+        return rtn.toArray(new Behavior[]{});
+    }
 
     /**
      * Constructor
@@ -118,15 +171,16 @@ class BehaviorAdapter extends ArrayAdapter{
         return result;
     }
 
-    public static Behavior[] collateBehaviorsByPositivity(Behavior.Positivity pos, Context context) {
-        Behavior[] b = dbh.getBehaviorObjects(context);
-        ArrayList<Behavior> rtn = new ArrayList<Behavior>();
-        for (Behavior aB : b) {
-            if (aB.behaviorPositivity == pos) rtn.add(aB);
+    public Behavior[] getCheckedBehaviors() {
+        if(getCount()==0) return new Behavior[]{};
+        ArrayList<Behavior> result = new ArrayList<Behavior>();
+        for (int i = 0; i < getCount(); i++) {
+            Behavior current = (Behavior)getItem(i);
+            if (current == null) throw new AssertionError();
+            if(current.checked) result.add(current);
         }
-        return rtn.toArray(new Behavior[]{});
+        return result.toArray(new Behavior[]{});
     }
-
     private class ViewHolder{
         CheckBox behaviorSelectedCheckbox;
         TextView behaviorNameTxt;

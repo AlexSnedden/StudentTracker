@@ -29,10 +29,13 @@ public class Student {
     private final String lastName;
     private final String email;
     private final String studentID;
-    private final DatabaseHandler dbh = DatabaseHandler.getInstance();
+    private static final DatabaseHandler dbh = DatabaseHandler.getInstance();
+
+    public static Student retrieveStudent(String studentID){
+        return dbh.retrieveStudent(studentID);
+    }
 
     //<editor-fold desc="Constructors">
-
     /**
      * Constructor with email address
      * @param firstName First name of student
@@ -40,27 +43,18 @@ public class Student {
      * @param email     Email of the student, can be null
      * @param studentID A value unique to each student. Will be used as a primary key.
      */
-    Student(String firstName, String lastName, String studentID, String email) {
+    Student(String firstName, String lastName, String studentID, @Nullable String email) {
         //Using params, we grab the information needed to represent the student.
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.studentID = studentID;
+
+        if(!dbh.studentExists(studentID)) {
+            dbh.addStudent(studentID, firstName, lastName, email != null ? email : "NULL");
+        }
     }
 
-    /**
-     * Constructor with no email address
-     * @param firstName First name of student
-     * @param lastName  Last name of Student
-     * @param studentID A value unique to each student. Will be used as a primary key
-     */
-    Student(String firstName, String lastName, String studentID) {
-        //Same as above, sans email
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.studentID = studentID;
-        this.email = null;
-    }
     //</editor-fold>
 
     //<editor-fold desc="Attendance Record Handling">
@@ -73,12 +67,12 @@ public class Student {
      * @param lateArrival    Did the student arrive late?
      * @param earlyDeparture Did the student leave class early?
      * @param excused        Was the behavior excused?
-     *                       <p>
      *                       Can also be used to record attendance after the fact.
      */
-    public void recordAttendence(String classID, AttendanceInterval interval,
+    public void recordAttendence(String classID, @Nullable AttendanceInterval interval,
                                  boolean present, boolean lateArrival,
                                  boolean earlyDeparture, boolean excused) {
+        if(interval == null) interval = AttendanceInterval.getCurrent();
         dbh.recordAttendance(studentID, classID, interval.getStart().getMillis(),
                 present, lateArrival, earlyDeparture, excused);
     }
@@ -135,6 +129,11 @@ public class Student {
      */
     public void deleteAttendance() {
         Cursor c = dbh.getClassesForStudent(this.studentID);
+
+        c.moveToFirst();
+        do{
+            deleteAttendanceForClass(c.getString(c.getColumnIndex(DatabaseHandler.AttendanceRecordsTableSchema.CLASS_ID_COL)));
+        } while (c.moveToNext());
 
     }
 
