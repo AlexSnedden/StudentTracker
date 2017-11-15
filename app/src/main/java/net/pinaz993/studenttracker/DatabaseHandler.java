@@ -24,8 +24,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public static DatabaseHandler instance = null;
 
-    private String TAG = "DB";
-
     public static final String DATABASE_NAME = "StudentTracking.db";
     public static final String IS_THAT = " =?";
     public static final String IS_THAT_AND = IS_THAT + " AND ";
@@ -83,39 +81,39 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             StudentTableSchema.EMAIL_COL_DEF +")";
         db.execSQL(createStudentTable);
         String createStudentClassMappingTable = "CREATE TABLE " +
-                StudentClassMappingTableSchema.NAME + " (" +
-                StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
-                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF.substring(0, 23) +/*
-                //StudentClassMappingTableSchema.PRIMARY_KEY_DEF +
-                StudentClassMappingTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + */")";
+            StudentClassMappingTableSchema.NAME + " (" +
+            StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
+            StudentClassMappingTableSchema.STUDENT_ID_COL_DEF +
+            StudentClassMappingTableSchema.PRIMARY_KEY_DEF +
+            StudentClassMappingTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
         db.execSQL(createStudentClassMappingTable);
         String createBehaviorRecordTable = "CREATE TABLE " +
-                BehaviorRecordTableSchema.NAME + " (" +
-                BehaviorRecordTableSchema.BEHAVIOR_ID_COL_DEF +
-                BehaviorRecordTableSchema.STUDENT_ID_COL_DEF +
-                BehaviorRecordTableSchema.CLASS_ID_COL_DEF +
-                BehaviorRecordTableSchema.TIMESTAMP_COL_DEF +
-                BehaviorRecordTableSchema.PRIMARY_KEY_DEF +
-                BehaviorRecordTableSchema.BEHAVIOR_ID_ALIAS_DEF +
-                BehaviorRecordTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
+            BehaviorRecordTableSchema.NAME + " (" +
+            BehaviorRecordTableSchema.BEHAVIOR_ID_COL_DEF +
+            BehaviorRecordTableSchema.STUDENT_ID_COL_DEF +
+            BehaviorRecordTableSchema.CLASS_ID_COL_DEF +
+            BehaviorRecordTableSchema.TIMESTAMP_COL_DEF +
+            BehaviorRecordTableSchema.PRIMARY_KEY_DEF +
+            BehaviorRecordTableSchema.BEHAVIOR_ID_ALIAS_DEF +
+            BehaviorRecordTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
         db.execSQL(createBehaviorRecordTable);
         String createBehaviorAliasTable = "CREATE TABLE " +
-                BehaviorAliasTableSchema.NAME + " (" +
-                BehaviorAliasTableSchema.BEHAVIOR_ID_COL_DEF +
-                BehaviorAliasTableSchema.BEHAVIOR_NAME_COL_DEF +
-                BehaviorAliasTableSchema.POSITIVITY_COL_DEF + " )";
+            BehaviorAliasTableSchema.NAME + " (" +
+            BehaviorAliasTableSchema.BEHAVIOR_ID_COL_DEF +
+            BehaviorAliasTableSchema.BEHAVIOR_NAME_COL_DEF +
+            BehaviorAliasTableSchema.POSITIVITY_COL_DEF + " )";
         db.execSQL(createBehaviorAliasTable);
         String createAttendanceRecordsTable = "CREATE TABLE " +
-                AttendanceRecordsTableSchema.NAME + " (" +
-                AttendanceRecordsTableSchema.STUDENT_ID_COL_DEF +
-                AttendanceRecordsTableSchema.CLASS_ID_COL_DEF +
-                AttendanceRecordsTableSchema.INTERVAL_COL_DEF +
-                AttendanceRecordsTableSchema.PRESENT_COL_DEF +
-                AttendanceRecordsTableSchema.LATE_ARRIVAL_COL_DEF +
-                AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL_DEF +
-                AttendanceRecordsTableSchema.EXCUSED_COL_DEF +
-                AttendanceRecordsTableSchema.PRIMARY_KEY_DEF +
-                AttendanceRecordsTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
+            AttendanceRecordsTableSchema.NAME + " (" +
+            AttendanceRecordsTableSchema.STUDENT_ID_COL_DEF +
+            AttendanceRecordsTableSchema.CLASS_ID_COL_DEF +
+            AttendanceRecordsTableSchema.INTERVAL_COL_DEF +
+            AttendanceRecordsTableSchema.PRESENT_COL_DEF +
+            AttendanceRecordsTableSchema.LATE_ARRIVAL_COL_DEF +
+            AttendanceRecordsTableSchema.EARLY_DEPARTURE_COL_DEF +
+            AttendanceRecordsTableSchema.EXCUSED_COL_DEF +
+            AttendanceRecordsTableSchema.PRIMARY_KEY_DEF +
+            AttendanceRecordsTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
         db.execSQL(createAttendanceRecordsTable);
     }
 
@@ -459,7 +457,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public Cursor getStudentsInClass(String classID){
-        String where = StudentClassMappingTableSchema.CLASS_ID_COL + " = ?";
+        String where = StudentClassMappingTableSchema.CLASS_ID_COL + IS_THAT;
         return db.query(StudentClassMappingTableSchema.NAME,
                 new String[]{StudentClassMappingTableSchema.STUDENT_ID_COL}, where,
                 new String[]{classID}, null, null,
@@ -474,10 +472,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public Cursor getAllClasses () {
-        return db.query(StudentClassMappingTableSchema.NAME,
-                new String[]{StudentClassMappingTableSchema.CLASS_ID_COL},
-                null, null, null, null,
-                StudentClassMappingTableSchema.CLASS_ID_COL);
+        return db.query(true, StudentClassMappingTableSchema.NAME,
+                new String[]{StudentClassMappingTableSchema.CLASS_ID_COL}, null,
+                null, null, null,
+                StudentClassMappingTableSchema.STUDENT_ID_COL, null);
     }
 
     public Cursor getAllStudentsInClasses() {

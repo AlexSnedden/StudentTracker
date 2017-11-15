@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Student Tracker</string>
-    <string name="behavior_prompt">Choose a Behavior</string>
     <string-array name="behaviors_positive">
         <item>Well Prepared</item>
         <item>Quality Contribution</item>

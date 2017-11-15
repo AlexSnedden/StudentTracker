@@ -17,9 +17,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Temp" />
-        <activity android:name=".CollapseTest" />
-        <activity android:name=".ClassListActivity"></activity>
-        <activity android:name=".LoadingActivity" />
+        <activity android:name=".ClassListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".LoadingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
