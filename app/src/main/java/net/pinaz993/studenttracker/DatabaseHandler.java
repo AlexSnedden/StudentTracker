@@ -12,6 +12,7 @@ import android.util.Log;
 
 import org.joda.time.Instant;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -22,6 +23,8 @@ import java.util.concurrent.ExecutionException;
 public class DatabaseHandler extends SQLiteOpenHelper{
 
     public static DatabaseHandler instance = null;
+
+    private String TAG = "DB";
 
     public static final String DATABASE_NAME = "StudentTracking.db";
     public static final String IS_THAT = " =?";
@@ -82,9 +85,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         String createStudentClassMappingTable = "CREATE TABLE " +
                 StudentClassMappingTableSchema.NAME + " (" +
                 StudentClassMappingTableSchema.CLASS_ID_COL_DEF +
-                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF +
-                StudentClassMappingTableSchema.PRIMARY_KEY_DEF +
-                StudentClassMappingTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + ")";
+                StudentClassMappingTableSchema.STUDENT_ID_COL_DEF.substring(0, 23) +/*
+                //StudentClassMappingTableSchema.PRIMARY_KEY_DEF +
+                StudentClassMappingTableSchema.STUDENT_ID_FOREIGN_KEY_DEF + */")";
         db.execSQL(createStudentClassMappingTable);
         String createBehaviorRecordTable = "CREATE TABLE " +
                 BehaviorRecordTableSchema.NAME + " (" +
@@ -123,21 +126,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         // needs to be done when an old database is updated to reflect the new schema, this is where
         // you put it.
         // Right now, there is nothing that needs done, so it sits empty.
-    }
-
-    /**
-     * Completely resets the database to factory defaults
-     */
-    public void resetDatabase(){
-        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
-        if(c.moveToFirst()) {
-            while (!c.isAfterLast()) {
-                String name = c.getString(c.getColumnIndex("name"));
-                db.execSQL("DROP TABLE IF EXISTS" + name);
-            }
-        }
-        c.close();
-        onCreate(db);
     }
 
     //<editor-fold desc="Student Record Handling">
@@ -415,18 +403,20 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public Behavior[] getBehaviorObjects(Context context){
         Cursor c = getAllBehaviors();
-        Behavior[] behaviors = new Behavior[c.getCount()];
-        for(c.moveToFirst(); c.moveToNext(); c.isAfterLast()){
+        ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
+        c.moveToFirst();
+        while(!c.isAfterLast()){
             Behavior currentBehavior = new Behavior(
                     c.getInt(c.getColumnIndex(BehaviorAliasTableSchema.BEHAVIOR_ID_COL)),
                     c.getString(c.getColumnIndex(BehaviorAliasTableSchema.BEHAVIOR_NAME_COL)),
                     Behavior.Positivity.toPos(c.getInt(c.getColumnIndex(BehaviorAliasTableSchema.POSITIVITY_COL))),
                     context
             );
-            behaviors[c.getPosition()] = currentBehavior;
+            behaviors.add(currentBehavior);
+            c.moveToNext();
         }
         c.close();
-        return behaviors;
+        return behaviors.toArray(new Behavior[]{});
     }
 
     public boolean behaviorExists(int behaviorID){

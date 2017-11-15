@@ -1,5 +1,7 @@
 package net.pinaz993.studenttracker;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -96,6 +98,38 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
             });
 
             holder.studentNameTxt.setText(student.getFullName());
+
+            holder.topLayout.setLongClickable(true);
+            holder.topLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    FragmentManager fm = ((Activity)getContext()).getFragmentManager();
+                    BehaviorDialog dialog = new BehaviorDialog();
+                    dialog.setListener(StudentPaneAdapter.this);
+                    dialog.show(fm, student.getID() + "BehaviorDialog");
+                    return true;
+                }
+            });
+            holder.swipe.setSwipeListener(new SwipeRevealLayout.SwipeListener() {
+                @Override
+                public void onClosed(SwipeRevealLayout view) {
+                    holder.earlyDepartureBtn.setActivated(false);
+                    holder.lateArrivalBtn.setActivated(false);
+                    holder.excusedBtn.setActivated(false);
+                }
+
+                @Override
+                public void onOpened(SwipeRevealLayout view) {
+                    holder.earlyDepartureBtn.setActivated(true);
+                    holder.lateArrivalBtn.setActivated(true);
+                    holder.excusedBtn.setActivated(true);
+
+                }
+
+                @Override
+                public void onSlide(SwipeRevealLayout view, float slideOffset) {
+                }
+            });
         }
         else throw new NullPointerException("Tried to bind non-existent student to view");
 

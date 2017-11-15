@@ -6,6 +6,7 @@
 
     <TextView
         android:id="@+id/behavior_name_txt"
+        android:layout_width="0dp"
         android:layout_height="?android:listPreferredItemHeightLarge"
         android:gravity="center_vertical|center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"

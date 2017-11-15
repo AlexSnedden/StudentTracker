@@ -46,11 +46,13 @@ public class BehaviorDialog extends DialogFragment {
         super.onAttach(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         content = inflater.inflate(R.layout.behavior_box_list_template, null);
+    }
 
+    public void setListener(BehaviorDialogListener listener){
         try {
-            listener = (BehaviorDialogListener) activity;
+            listener = (BehaviorDialogListener) getActivity();
         } catch (ClassCastException e){
-            throw new ClassCastException(activity.toString() +
+            throw new ClassCastException(getActivity().toString() +
                     " must implement BehaviorDialogListener");
         }
     }
@@ -76,7 +78,7 @@ public class BehaviorDialog extends DialogFragment {
         builder.setView(content);
         positiveBehaviorList = content.findViewById(R.id.behaviors_positive);
         neutralBehaviorList = content.findViewById(R.id.behaviors_neutral);
-        negativeBehaviorList = content.findViewById(R.id.behaviors_negetive);
+        negativeBehaviorList = content.findViewById(R.id.behaviors_negative);
 
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override

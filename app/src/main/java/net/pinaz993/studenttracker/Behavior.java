@@ -1,7 +1,6 @@
 package net.pinaz993.studenttracker;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 
@@ -18,21 +17,21 @@ public class Behavior{
 
     public enum Positivity{
 
-        NEGATIVE (-1, Resources.getSystem().getString(R.string.behavior_negative)),
-        NEUTRAL (0, Resources.getSystem().getString(R.string.behavior_neutral)),
-        POSITIVE (1, Resources.getSystem().getString(R.string.behavior_positive));
+        NEGATIVE (-1, R.string.behavior_negative),
+        NEUTRAL (0, R.string.behavior_neutral),
+        POSITIVE (1, R.string.behavior_positive);
 
         public final int value;
-        private String name;
+        private int nameLoc;
 
-        Positivity(int value, String name) {
+
+        Positivity(int value, int nameLoc) {
             this.value = value;
-            this.name = name;
+            this.nameLoc = nameLoc;
         }
 
-        @Override
-        public String toString() {
-            return this.name;
+        public String toStringfromContext(Context context) {
+            return context.getString(nameLoc);
         }
 
         public static Positivity toPos(int i){

@@ -16,6 +16,12 @@ public class MainActivity extends Activity {
         DatabaseHandler dbh = new DatabaseHandler(getApplicationContext(), null);
         dbh.getDatabaseManually();
 
+        Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
+        redirect.putExtra("CLASS_ID_KEY", "Fiction101");
+        startActivity(redirect);
+    }
+
+    private void prepDB(DatabaseHandler dbh){
         Student bob = new Student("Bobert", "Roberts", "0", null),
                 will = new Student("Will", "Gladeson", "1", null),
                 hope = new Student("Hope", "Gladeson", "2", null),
@@ -46,12 +52,5 @@ public class MainActivity extends Activity {
         dbh.addNewBehavior("NeutralTest2", 0);
         dbh.addNewBehavior("NegativeTest1", -1);
         dbh.addNewBehavior("NegativeTest2", -1);
-
-        Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
-        redirect.putExtra("CLASS_ID_KEY", "Fiction101");
-        startActivity(redirect);
-
-
-
     }
 }
