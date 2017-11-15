@@ -1,18 +1,8 @@
 package net.pinaz993.studenttracker;
-import android.app.Activity;
-import android.content.Context;
+
 import android.support.annotation.Nullable;
 
-import org.joda.time.Duration;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-
 import java.sql.Timestamp;
-
-import io.paperdb.Paper;
-
-import static net.pinaz993.studenttracker.MyApplication.dbHandler;
 
 
 /**
@@ -40,11 +30,7 @@ public class Student {
     private final String email;
     private final String studentID;
     private boolean delinquent; // condition for read formatting on the student's name
-
-
-    public static Student retrieve(String studentID) {
-        return Paper.book(BOOK_ID).read(studentID);
-    }
+    private DatabaseHandler dbh = DatabaseHandler.getInstance();
 
     //<editor-fold desc="Constructors">
 
@@ -178,18 +164,6 @@ public class Student {
         return false;
     }
 
-    /**
-     * Saves the student to the student database. Anything that shouldn't be saved needs to be marked
-     * as transient, such as an attendance summary.
-     */
-    public void save() {
-        if(dbHandler.studentExists(studentID)) {
-            dbHandler.updateStudent(studentID, firstName, lastName, email);
-        } else {
-            dbHandler.recordStudent(studentID, firstName, lastName, email);
-        }
-    }
-
     public AttendanceSummary compileAttendanceSummery() {
         //TODO: Implement Student.compileAttendanceSummery()
 
@@ -254,6 +228,13 @@ public class Student {
     }
     //</editor-fold>
 
+    public void recordAbsentOrPresent(boolean isPresent, String classID) {
+        dbh.updateAttendanceRecord(studentID, classID, System.currentTimeMillis() / 1000L, isPresent, false, false, false);
+    }
+
+    public void recordLateArrival(boolean isChecked) {
+
+    }
 
     /**
      * Used to summarise all attendance records recorded for a student.
@@ -268,7 +249,6 @@ public class Student {
         int earlyDepartures;
         int excusedEarlyDepartures;
     }
-
 
     /**
      * An object for storing an interval of attendance. Can be a week long, or a day long.

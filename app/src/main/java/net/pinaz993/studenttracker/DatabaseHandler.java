@@ -23,22 +23,25 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public static final String DATABASE_NAME = "StudentTracking.db";
     public static final int DATABASE_VERSION = 1; //See this.onUpgrade
+    private static DatabaseHandler instance;
     private SQLiteDatabase db;
-    private Context context;
     private AsyncTask task;
 
+    public static DatabaseHandler getInstance() {
+        return instance;
+    }
     //<editor-fold desc="Constructors and init()">
     public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-        this.context = context;
-
+        String EXCEPTION_MESSAGE = "Application tried to instantiate a second database instance.";
+        if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
+        instance = this;
         init();
     }
 
-    public DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory,
+    private DatabaseHandler(Context context, @Nullable SQLiteDatabase.CursorFactory factory,
                            DatabaseErrorHandler errorHandler) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION, errorHandler);
-        this.context = context;
         init();
     }
 
