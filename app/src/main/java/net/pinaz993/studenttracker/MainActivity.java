@@ -11,7 +11,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SettingsHandler settings = new SettingsHandler(getApplicationContext());
+        new SettingsHandler(getApplicationContext());
 
         DatabaseHandler dbh = new DatabaseHandler(getApplicationContext(), null);
         dbh.getDatabaseManually();
