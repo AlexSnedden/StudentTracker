@@ -72,9 +72,14 @@
             android:layout_gravity="center_vertical"
             android:layout_weight=".85"
             android:gravity="center"
-            android:switchMinWidth="56dp"
+            android:switchMinWidth="0dp"
             android:textOff=''
             android:textOn='' />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15" />
     </LinearLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>
