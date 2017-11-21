@@ -45,7 +45,6 @@ public class MainActivity extends Activity {
 
         dbh.addStudentToClass("1", "Humanitarianism");
 
-
         dbh.addNewBehavior("PositiveTest1", 1);
         dbh.addNewBehavior("PositiveTest2", 1);
         dbh.addNewBehavior("NeutralTest1", 0);

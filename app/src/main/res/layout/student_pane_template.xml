@@ -45,41 +45,49 @@
     </LinearLayout>
 
     <!--Top Layout-->
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="10">
 
         <TextView
             android:id="@+id/studentNameTxt"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight=".15"
             android:gravity="center_vertical"
             android:text="@string/invalid_student_txt"
             android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Switch
             android:id="@+id/absentPresentSwitch"
             style="@style/SwitchRedGreen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight=".85"
-            android:gravity="center"
-            android:switchMinWidth="0dp"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="16dp"
             android:textOff=''
-            android:textOn='' />
+            android:textOn=''
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.692"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@id/mid_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <Space
-            android:layout_width="20dp"
+        <android.support.constraint.Guideline
+            android:id="@+id/mid_guideline"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".15" />
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".7" />
+    </android.support.constraint.ConstraintLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>
