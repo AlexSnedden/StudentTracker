@@ -257,7 +257,7 @@ public class Student {
             /* There already exists an attendance record for the day */
 
         } else {
-
+            // dbh.addAttendanceRecord
         }
 
     }
