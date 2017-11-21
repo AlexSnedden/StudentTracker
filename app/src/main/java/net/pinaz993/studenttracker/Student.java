@@ -255,13 +255,50 @@ public class Student {
         Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
         if(latestAttendanceRecord != null) {
             /* There already exists an attendance record for the day */
-
+            long interval = latestAttendanceRecord.getLong(latestAttendanceRecord.getColumnIndex("interval"));
+            /* We do not want to modify these values for the row */
+            boolean lateArrival, earlyDeparture, excused;
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("lateArrival"))==1) {
+                    lateArrival = true;
+            } else {
+                lateArrival = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("earlyDeparture")) == 1) {
+                earlyDeparture = true;
+            } else {
+                earlyDeparture = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("excused")) == 1) {
+                excused = true;
+            } else {
+                excused = false;
+            }
+            dbh.updateAttendanceRecord(studentID, classID, interval, present, lateArrival, earlyDeparture, excused);
         } else {
-            // dbh.addAttendanceRecord
+            /* create a new attendance record for right now */
+            dbh.recordAttendance(studentID, classID, System.currentTimeMillis(), present, false, false, false);
         }
-
     }
     public void recordLateArrival(boolean lateArrival, String classID) {
+        Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
+        long interval = latestAttendanceRecord.getLong(latestAttendanceRecord.getColumnIndex("interval"));
+            /* We do not want to modify these values for the row */
+            boolean present, earlyDeparture, excused;
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("present"))==1) {
+                present = true;
+            } else {
+                present = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("earlyDeparture")) == 1) {
+                earlyDeparture = true;
+            } else {
+                earlyDeparture = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("excused")) == 1) {
+                excused = true;
+            } else {
+                excused = false;
+            }
 
     }
     //</editor-fold>
