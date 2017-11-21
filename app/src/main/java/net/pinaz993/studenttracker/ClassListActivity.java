@@ -21,7 +21,7 @@ public class ClassListActivity extends AppCompatActivity implements
     private String classID;
     private DatabaseHandler dbh = DatabaseHandler.getInstance();
     private SettingsHandler settings = SettingsHandler.getInstance();
-    private ExpandableLayout optionContainer, studentListContainer;
+    private ExpandableLayout optionContainer;
     Button dropMenuButton;
 
     @Override
@@ -41,8 +41,6 @@ public class ClassListActivity extends AppCompatActivity implements
 
         optionContainer = (ExpandableLayout) findViewById(R.id.option_container);
         optionContainer.setOnExpansionUpdateListener(this);
-
-        studentListContainer = (ExpandableLayout)findViewById(R.id.student_list_container);
 
         ListView studentList = (ListView) findViewById(R.id.student_list);
         Student[] students = getStudentsInClass();
@@ -109,7 +107,6 @@ public class ClassListActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         optionContainer.toggle(true);
-        studentListContainer.toggle(true);
     }
     //</editor-fold>
 }
