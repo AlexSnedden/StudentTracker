@@ -34,6 +34,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
 
     private Student student;
+    private String studentClassID;
 
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
@@ -108,16 +109,10 @@ public class StudentPaneAdapter extends ArrayAdapter {
         return convertView;
     }
 
-    // TODO: Temporary variable classID declared. We must pass the real one through, though.
     private void toggleAbsentPresent(boolean isChecked, Student student) {
-        String classID = "foo";
-        student.recordAbsentOrPresent(isChecked, classID);
+        student.recordAbsentOrPresent(isChecked, studentClassID);
     }
-    private void toggleLateArrival(boolean isChecked, Student student) {
-        if(isChecked) {
-            student.recordLateArrival();
-        }
-    }
+    private void toggleLateArrival(boolean isChecked, Student student) {}
 
     private void toggleEarlyDeparture(boolean isChecked, Student student) {}
 

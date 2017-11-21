@@ -224,9 +224,9 @@ public class Student {
     //</editor-fold>
 
     //<editor-fold desc="Setters and Getters">
-    public boolean isDelinquent() {
+    /*public boolean isDelinquent() {
         return delinquent;
-    }
+    }*/
 
     public String getFirstName() {
         return firstName;
@@ -240,7 +240,7 @@ public class Student {
         return email;
     }
 
-    public String getID() {
+    public String getStudentID() {
         return studentID;
     }
 
@@ -249,6 +249,22 @@ public class Student {
     }
     //</editor-fold>
 
+
+    //<editor-fold desc="StudentPaneAdapter functions">
+    public void recordAbsentOrPresent(boolean present, String classID) {
+        Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
+        if(latestAttendanceRecord != null) {
+            /* There already exists an attendance record for the day */
+
+        } else {
+
+        }
+
+    }
+    public void recordLateArrival(boolean lateArrival, String classID) {
+
+    }
+    //</editor-fold>
 
     /**
      * Used to summarise all attendance records recorded for a student.
@@ -264,4 +280,3 @@ public class Student {
         int excusedEarlyDepartures;
     }
 }
-
