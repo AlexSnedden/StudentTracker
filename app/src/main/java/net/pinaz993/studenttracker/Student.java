@@ -282,6 +282,7 @@ public class Student {
     public void recordLateArrival(boolean lateArrival, String classID) {
         Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
         long interval = latestAttendanceRecord.getLong(latestAttendanceRecord.getColumnIndex("interval"));
+        if(latestAttendanceRecord != null) {
             /* We do not want to modify these values for the row */
             boolean present, earlyDeparture, excused;
             if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("present"))==1) {
@@ -299,7 +300,10 @@ public class Student {
             } else {
                 excused = false;
             }
+            dbh.updateAttendanceRecord(studentID, classID, period,
+        } else {
 
+        }
     }
     //</editor-fold>
 
