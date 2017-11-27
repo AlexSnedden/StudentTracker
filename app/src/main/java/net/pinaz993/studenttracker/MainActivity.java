@@ -3,6 +3,7 @@ package net.pinaz993.studenttracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends Activity {
 
@@ -16,9 +17,15 @@ public class MainActivity extends Activity {
         DatabaseHandler dbh = new DatabaseHandler(getApplicationContext(), null);
         dbh.getDatabaseManually();
 
+        if(dbh.getAllClasses().getCount() == 0 || dbh.getAllStudentsInClasses().getCount() == 0){
+            prepDB(dbh);
+            Log.d("MAIN", "No entries in DB found; generating sample data");
+        }
+
         Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
         redirect.putExtra("CLASS_ID_KEY", "Fiction101");
         startActivity(redirect);
+
     }
 
     private void prepDB(DatabaseHandler dbh){
