@@ -112,11 +112,17 @@ public class StudentPaneAdapter extends ArrayAdapter {
     private void toggleAbsentPresent(boolean isChecked, Student student) {
         student.recordAbsentOrPresent(isChecked, studentClassID);
     }
-    private void toggleLateArrival(boolean isChecked, Student student) {}
+    private void toggleLateArrival(boolean isChecked, Student student) {
+        student.recordLateArrival(isChecked, studentClassID);
+    }
 
-    private void toggleEarlyDeparture(boolean isChecked, Student student) {}
+    private void toggleEarlyDeparture(boolean isChecked, Student student) {
+        student.recordEarlyDeparture(isChecked, studentClassID);
+    }
 
-    private void toggleExcused(boolean isChecked, Student student) {}
+    private void toggleExcused(boolean isChecked, Student student) {
+        student.recordExcused(isChecked, studentClassID);
+    }
 
     private class ViewHolder {
         LinearLayout bottomLayout;

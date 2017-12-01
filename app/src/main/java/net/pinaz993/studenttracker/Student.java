@@ -305,34 +305,62 @@ public class Student {
             dbh.recordAttendance(studentID, classID, System.currentTimeMillis(), true, lateArrival, false, false);
         }
     }
-    public void recordEarlyDeparture(String studentID, String classID) {
+    public void recordEarlyDeparture(boolean earlyDeparture, String classID) {
         Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
         if(latestAttendanceRecord != null) {
             /* There already exists an attendance record for the day */
             long interval = latestAttendanceRecord.getLong(latestAttendanceRecord.getColumnIndex("interval"));
             /* We do not want to modify these values for the row */
-            boolean lateArrival, earlyDeparture, excused;
+            boolean lateArrival, present, excused;
             if (latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("lateArrival")) == 1) {
                 lateArrival = true;
             } else {
                 lateArrival = false;
             }
-            if (latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("earlyDeparture")) == 1) {
-                earlyDeparture = true;
+            if (latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("present")) == 1) {
+                present = true;
             } else {
-                earlyDeparture = false;
+                present = false;
             }
             if (latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("excused")) == 1) {
                 excused = true;
             } else {
                 excused = false;
             }
+            dbh.updateAttendanceRecord(studentID, classID, interval, present, lateArrival, earlyDeparture, excused);
+        } else {
+            dbh.recordAttendance(studentID, classID, System.currentTimeMillis(), true, false, earlyDeparture, false);
+        }
+    }
+    public void recordExcused(boolean excused, String classID) {
+        Cursor latestAttendanceRecord = dbh.getCurrentAttendanceRecordForStudentInClass(studentID, classID);
+        if(latestAttendanceRecord != null) {
+            long interval = latestAttendanceRecord.getLong(latestAttendanceRecord.getColumnIndex("interval"));
+            boolean lateArrival, present, earlyDeparture;
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("lateArrival")) == 1) {
+                lateArrival = true;
+            } else {
+                lateArrival = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("present")) == 1) {
+                present = true;
+            } else {
+                present = false;
+            }
+            if(latestAttendanceRecord.getInt(latestAttendanceRecord.getColumnIndex("earlyDeparture")) == 1) {
+                earlyDeparture = true;
+            } else {
+                earlyDeparture = false;
+            }
+            dbh.updateAttendanceRecord(studentID, classID, interval, present, lateArrival, earlyDeparture, excused);
+        } else {
+            dbh.recordAttendance(studentID, classID, System.currentTimeMillis(), true, false, false, excused);
         }
     }
     //</editor-fold>
 
     /**
-     * Used to summarise all attendance records recorded for a student.
+     * Used to summarize all attendance records recorded for a student.
      * Will not be initialised on creation. Will only be created when needed.
      * TODO: Integrate with SQL Implementation of attendance records
      */
