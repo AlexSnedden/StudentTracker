@@ -1,6 +1,5 @@
 package net.pinaz993.studenttracker;
 
-import com.mashape.unirest.http.Unirest;
 
 import java.util.Formatter;
 
