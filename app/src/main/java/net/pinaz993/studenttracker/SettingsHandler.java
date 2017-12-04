@@ -19,7 +19,6 @@ public class SettingsHandler {
     private Duration attendanceIntervalDuration;
     private boolean daily = false;
     private boolean weekly = false;
-    private final SharedPreferences.Editor editor;
     private final SharedPreferences settings;
 
     private final String ATTENDANCE_MODE_DAILY;
@@ -41,15 +40,9 @@ public class SettingsHandler {
         CLASS_EDITOR
     }
 
-    private ACTIVITY lastActivityRun;
-
-    private String lastClassID;
-    private String lastStudentID;
-
     public SettingsHandler(Context context) {
         settings = context.getSharedPreferences(
                 context.getString(R.string.settings_key), Context.MODE_PRIVATE);
-        editor = settings.edit();
         ATTENDANCE_MODE_DAILY = context.getString(R.string.attendance_mode_daily);
         ATTENDANCE_MODE_WEEKLY = context.getString(R.string.attendance_mode_weekly);
         ATTENDANCE_MODE_DEFAULT = ATTENDANCE_MODE_DAILY;
@@ -79,15 +72,19 @@ public class SettingsHandler {
     }
 
     public void setAttendanceMode(String s){
+        SharedPreferences.Editor editor = settings.edit();
         if(getAttendanceModeChoices().contains(s)) {
             editor.putString(ATTENDANCE_MODE_KEY, s);
+            editor.apply();
         }
         else {
             editor.putString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
+            editor.apply();
         }
     }
 
     public void setAttendanceIntervalDuration(Context context) {
+        SharedPreferences.Editor editor = settings.edit();
         if(Objects.equals(attendanceMode, context.getString(R.string.attendance_mode_daily))) {
             attendanceIntervalDuration = new Duration(86400000); //Number of milliseconds in a day
             daily = true;
@@ -113,7 +110,9 @@ public class SettingsHandler {
     }
 
     public void setIsFirstTimeLaunch(boolean b){
+        SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, b);
+        editor.apply();
     }
 
     public boolean isDaily() {
@@ -133,7 +132,9 @@ public class SettingsHandler {
     }
 
     public void setLastActivityRun(ACTIVITY lastActivityRun) {
+        SharedPreferences.Editor editor = settings.edit();
         editor.putInt(LAST_ACTIVITY_RUN_KEY, lastActivityRun.ordinal());
+        editor.apply();
     }
 
     public String getLastClassID() {
@@ -141,7 +142,9 @@ public class SettingsHandler {
     }
 
     public void setLastClassID(String lastClassID) {
+        SharedPreferences.Editor editor = settings.edit();
         editor.putString(LAST_CLASS_ID_KEY, lastClassID);
+        editor.apply();
     }
 
     public String getLastStudentID() {
@@ -149,6 +152,8 @@ public class SettingsHandler {
     }
 
     public void setLastStudentID(String lastStudentID) {
+        SharedPreferences.Editor editor = settings.edit();
         editor.putString(LAST_STUDENT_ID_KEY, lastStudentID);
+        editor.apply();
     }
 }

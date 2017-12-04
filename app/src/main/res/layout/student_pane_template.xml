@@ -11,8 +11,8 @@
 
     <!--Bottom Layout-->
     <LinearLayout
-        android:id="@+id/bottomLayout"
-        android:background="@color/colorPrimaryDark"
+        android:id="@+id/bottom_layout"
+        android:background="@color/color_primary_dark"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="right|center_vertical"
@@ -22,7 +22,7 @@
         <!--TODO: Make these buttons conform to Material guidelines-->
 
         <ToggleButton
-            android:id="@+id/excusedBtn"
+            android:id="@+id/excused_btn"
             android:theme="@style/AppTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -30,14 +30,14 @@
             android:textOn="@string/excused_txt"/>
 
         <ToggleButton
-            android:id="@+id/earlyDepartureBtn"
+            android:id="@+id/early_departure_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textOff="@string/early_departure_txt"
             android:textOn="@string/early_departure_txt" />
 
         <ToggleButton
-            android:id="@+id/lateArrivalBtn"
+            android:id="@+id/late_arrival_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textOff="@string/late_arrival_txt"
@@ -46,14 +46,14 @@
 
     <!--Top Layout-->
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/topLayout"
+        android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:weightSum="10">
 
         <TextView
-            android:id="@+id/studentNameTxt"
+            android:id="@+id/student_name_txt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -65,29 +65,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Switch
-            android:id="@+id/absentPresentSwitch"
-            style="@style/SwitchRedGreen"
-            android:layout_width="80dp"
+        <android.support.v7.widget.ContentFrameLayout
+            android:id="@+id/switch_touch_box"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="16dp"
-            android:textOff=''
-            android:textOn=''
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.692"
+            app:layout_constraintHorizontal_bias="0.41"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toEndOf="@id/mid_guideline"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@color/colorSecondaryDark"
+            android:alpha="64">
+
+            <Switch
+                android:id="@+id/absent_present_switch"
+                style="@style/SwitchRedGreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="16dp"
+                android:textOff=''
+                android:textOn=''/>
+        </android.support.v7.widget.ContentFrameLayout>
 
         <android.support.constraint.Guideline
             android:id="@+id/mid_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".7" />
+            app:layout_constraintGuide_percent=".8" />
     </android.support.constraint.ConstraintLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

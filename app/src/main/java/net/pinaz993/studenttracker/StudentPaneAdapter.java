@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -21,13 +22,11 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 /**
  * StudentPaneView is a view that displays information about and presents interactivity for an
  * instance of the Student class. It contains the name of the student, a switch for present/absent,
- * and a swipe-left function for revealing additional options pertaining to attendance. Later, it
- * will also contain a long-press functionality for additional interactivity with the Student
- * instance.
+ * and a swipe-left function for revealing additional options pertaining to attendance. It  also
+ * contains a long-press functionality for additional interactivity with the Student instance.
  *
  * Naturally, when this is constructed, it will need to have access to a single student object.
- * Other than that, it shouldn't need anything other than the context. The color of the main pane
- * will be determined by the conditional formatting from the student object.
+ * Other than that, it shouldn't need anything other than the context.
  * Created by Patrick Shannon on 9/20/2017.
  */
 
@@ -50,14 +49,15 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
             convertView = inflater.inflate(R.layout.student_pane_template, parent, false);
 
             holder = new ViewHolder();
-            holder.bottomLayout = convertView.findViewById(R.id.bottomLayout);
-            holder.excusedBtn = convertView.findViewById(R.id.excusedBtn);
-            holder.earlyDepartureBtn = convertView.findViewById(R.id.earlyDepartureBtn);
-            holder.lateArrivalBtn = convertView.findViewById(R.id.lateArrivalBtn);
+            holder.bottomLayout = convertView.findViewById(R.id.bottom_layout);
+            holder.excusedBtn = convertView.findViewById(R.id.excused_btn);
+            holder.earlyDepartureBtn = convertView.findViewById(R.id.early_departure_btn);
+            holder.lateArrivalBtn = convertView.findViewById(R.id.late_arrival_btn);
 
-            holder.topLayout = convertView.findViewById(R.id.topLayout);
-            holder.studentNameTxt = convertView.findViewById(R.id.studentNameTxt);
-            holder.absentPresentSwitch = convertView.findViewById(R.id.absentPresentSwitch);
+            holder.topLayout = convertView.findViewById(R.id.top_layout);
+            holder.studentNameTxt = convertView.findViewById(R.id.student_name_txt);
+            holder.absentPresentSwitch = convertView.findViewById(R.id.absent_present_switch);
+            holder.switchTouchBox = convertView.findViewById(R.id.switch_touch_box);
 
             holder.swipe = convertView.findViewById(R.id.swipe);
 
@@ -158,6 +158,7 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
 
         ConstraintLayout topLayout;
         TextView studentNameTxt;
+        FrameLayout switchTouchBox;
         Switch absentPresentSwitch;
 
         SwipeRevealLayout swipe;
