@@ -1,5 +1,6 @@
 package net.pinaz993.studenttracker;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,21 +23,25 @@ public class ClassListActivity extends AppCompatActivity implements
     private DatabaseHandler dbh = DatabaseHandler.getInstance();
     private SettingsHandler settings = SettingsHandler.getInstance();
     private ExpandableLayout optionContainer;
-    Button dropMenuButton;
+    private Button dropMenuButton;
+    private String CLASS_ID_KEY;
+    private String[] classes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_list);
+        CLASS_ID_KEY = getString(R.string.class_id_key);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(classID);
 
         Bundle extras = getIntent().getExtras();
-        classID = (extras != null) ? extras.getString("CLASS_ID_KEY") : null;
+        classID = (extras != null) ? extras.getString(CLASS_ID_KEY) : null;
         if (classID == null) {
             // activate the class selector dialog, use it to return a valid classID
+        } else {
+            getSupportActionBar().setTitle(classID);
         }
 
         optionContainer = (ExpandableLayout) findViewById(R.id.option_container);
@@ -44,10 +49,11 @@ public class ClassListActivity extends AppCompatActivity implements
 
         ListView studentList = (ListView) findViewById(R.id.student_list);
         Student[] students = getStudentsInClass();
-        StudentPaneAdapter studentPaneAdapter = new StudentPaneAdapter(this, students);
+        StudentPaneAdapter studentPaneAdapter = new StudentPaneAdapter(this, students, classID);
         studentList.setAdapter(studentPaneAdapter);
 
-        String[] classes = getAllClasses();
+
+        classes = getAllClasses();
         ListView optionsList = (ListView) findViewById(R.id.options_list);
         optionsList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, classes));
@@ -101,6 +107,9 @@ public class ClassListActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent goTo = new Intent(this, ClassListActivity.class);
+        goTo.putExtra(CLASS_ID_KEY, classes[position]);
+        startActivity(goTo);
 
     }
 
