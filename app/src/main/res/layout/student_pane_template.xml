@@ -1,102 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightLarge"
-    android:longClickable="true"
-    app:dragEdge="right"
-    tools:context="net.pinaz993.studenttracker.StudentPaneAdapter">
+    android:layout_height="80dp"
+    android:background="@color/colorPrimary">
 
-    <!--Bottom Layout-->
-    <LinearLayout
-        android:id="@+id/bottom_layout"
-        android:background="@color/color_primary_dark"
-        android:layout_width="wrap_content"
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipe"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="right|center_vertical"
-        android:layoutDirection="rtl"
-        android:orientation="horizontal">
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:longClickable="true"
+        app:dragEdge="right"
+        app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:context="net.pinaz993.studenttracker.StudentPaneAdapter">
 
-        <!--TODO: Make these buttons conform to Material guidelines-->
+        <!--Bottom Layout-->
 
-        <ToggleButton
-            android:id="@+id/excused_btn"
-            android:theme="@style/AppTheme"
+        <LinearLayout
+            android:id="@+id/bottom_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textOff="@string/excused_txt"
-            android:textOn="@string/excused_txt"/>
+            android:background="@color/color_primary_dark"
+            android:gravity="right|center_vertical"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal">
 
-        <ToggleButton
-            android:id="@+id/early_departure_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textOff="@string/early_departure_txt"
-            android:textOn="@string/early_departure_txt" />
+            <!--TODO: Make these buttons conform to Material guidelines-->
 
-        <ToggleButton
-            android:id="@+id/late_arrival_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textOff="@string/late_arrival_txt"
-            android:textOn="@string/late_arrival_txt" />
-    </LinearLayout>
-
-    <!--Top Layout-->
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/top_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        android:weightSum="10">
-
-        <TextView
-            android:id="@+id/student_name_txt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/invalid_student_txt"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.v7.widget.ContentFrameLayout
-            android:id="@+id/switch_touch_box"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.41"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toEndOf="@id/mid_guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@color/colorSecondaryDark"
-            android:alpha="64">
-
-            <Switch
-                android:id="@+id/absent_present_switch"
-                style="@style/SwitchRedGreen"
-                android:layout_width="match_parent"
+            <ToggleButton
+                android:id="@+id/excused_btn"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="16dp"
-                android:textOff=''
-                android:textOn=''/>
-        </android.support.v7.widget.ContentFrameLayout>
+                android:textOff="@string/excused_txt"
+                android:textOn="@string/excused_txt"
+                android:theme="@style/AppTheme" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/mid_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".8" />
-    </android.support.constraint.ConstraintLayout>
+            <ToggleButton
+                android:id="@+id/early_departure_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textOff="@string/early_departure_txt"
+                android:textOn="@string/early_departure_txt" />
 
-</com.chauthai.swipereveallayout.SwipeRevealLayout>
+            <ToggleButton
+                android:id="@+id/late_arrival_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textOff="@string/late_arrival_txt"
+                android:textOn="@string/late_arrival_txt" />
+        </LinearLayout>
+
+        <!--Top Layout-->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/student_name_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:text="@string/invalid_student_txt"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
+
+    <Switch
+        android:id="@+id/absent_present_switch"
+        style="@style/SwitchRedGreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="15dp"
+        android:textOff=''
+        android:textOn=''
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/mid_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".8" />
+
+</android.support.constraint.ConstraintLayout>
