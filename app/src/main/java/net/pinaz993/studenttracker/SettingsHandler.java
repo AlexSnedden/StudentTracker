@@ -55,9 +55,11 @@ public class SettingsHandler {
         attendanceMode = settings.getString(ATTENDANCE_MODE_KEY, ATTENDANCE_MODE_DEFAULT);
         setAttendanceIntervalDuration(context);
 
+        //<editor-fold desc="Dirty Demi-Singleton Nonsense">
         String EXCEPTION_MESSAGE = "Application tried to instantiate a second SettingsHandler instance.";
         if((instance != this) && (instance != null)) throw new IllegalStateException(EXCEPTION_MESSAGE);
         instance = this; // UGH! This is even dirtier than a singleton!
+        //</editor-fold>
     }
 
     public static SettingsHandler getInstance() {
