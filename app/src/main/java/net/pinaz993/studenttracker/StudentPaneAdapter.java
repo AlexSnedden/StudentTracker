@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -27,15 +26,19 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
  *
  * Naturally, when this is constructed, it will need to have access to a single student object.
  * Other than that, it shouldn't need anything other than the context.
+ *
+ * StudentPaneAdapter makes these views and adapts them to a list view for use in ClassListActivity.
  * Created by Patrick Shannon on 9/20/2017.
  */
 
 public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.BehaviorDialogListener {
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
+    private final String classID;
 
-    public StudentPaneAdapter(@NonNull Context context, @NonNull Object[] objects) {
+    public StudentPaneAdapter(@NonNull Context context, @NonNull Object[] objects, String classID) {
         super(context, R.layout.student_pane_template, objects);
+        this.classID = classID;
         inflater = LayoutInflater.from(getContext());
         binderHelper = new ViewBinderHelper();
         binderHelper.setOpenOnlyOne(true);
@@ -57,7 +60,6 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
             holder.topLayout = convertView.findViewById(R.id.top_layout);
             holder.studentNameTxt = convertView.findViewById(R.id.student_name_txt);
             holder.absentPresentSwitch = convertView.findViewById(R.id.absent_present_switch);
-            holder.switchTouchBox = convertView.findViewById(R.id.switch_touch_box);
 
             holder.swipe = convertView.findViewById(R.id.swipe);
 
@@ -73,28 +75,29 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
             holder.excusedBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    toggleExcused(holder.excusedBtn.isChecked(), student);
+                    student.recordExcused(holder.excusedBtn.isChecked(), classID);
                 }
             });
 
             holder.earlyDepartureBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    toggleEarlyDeparture(holder.earlyDepartureBtn.isChecked(), student);
+                    student.recordEarlyDeparture(holder.earlyDepartureBtn.isChecked(), classID);
                 }
             });
 
             holder.lateArrivalBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    toggleLateArrival(holder.lateArrivalBtn.isChecked(), student);
+                    student.recordLateArrival(holder.lateArrivalBtn.isChecked(), classID);
                 }
             });
 
             holder.absentPresentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    toggleAbsentPresent(holder.absentPresentSwitch.isChecked(), student);
+
+                    student.recordAbsentOrPresent(holder.absentPresentSwitch.isChecked(), classID);
                 }
             });
 
@@ -111,6 +114,7 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
                     return true;
                 }
             });
+
             holder.swipe.setSwipeListener(new SwipeRevealLayout.SwipeListener() {
                 @Override
                 public void onClosed(SwipeRevealLayout view) {
@@ -137,14 +141,6 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
         return convertView;
     }
 
-    private void toggleAbsentPresent(boolean isChecked, Student student) {}
-
-    private void toggleLateArrival(boolean isChecked, Student student) {}
-
-    private void toggleEarlyDeparture(boolean isChecked, Student student) {}
-
-    private void toggleExcused(boolean isChecked, Student student) {}
-
     @Override
     public void onDialogPositiveClick(BehaviorDialog dialog) {
         Behavior[] selectedBehaviors = dialog.collectResults();
@@ -158,7 +154,6 @@ public class StudentPaneAdapter extends ArrayAdapter implements BehaviorDialog.B
 
         ConstraintLayout topLayout;
         TextView studentNameTxt;
-        FrameLayout switchTouchBox;
         Switch absentPresentSwitch;
 
         SwipeRevealLayout swipe;
