@@ -12,6 +12,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String CLASS_ID_KEY = getString(R.string.class_id_key);
+
         new SettingsHandler(getApplicationContext());
 
         DatabaseHandler dbh = new DatabaseHandler(getApplicationContext(), null);
@@ -23,7 +25,7 @@ public class MainActivity extends Activity {
         }
 
         Intent redirect = new Intent(MainActivity.this, ClassListActivity.class);
-        redirect.putExtra("CLASS_ID_KEY", "Fiction101");
+        redirect.putExtra(CLASS_ID_KEY, "Fiction101");
         startActivity(redirect);
 
     }
