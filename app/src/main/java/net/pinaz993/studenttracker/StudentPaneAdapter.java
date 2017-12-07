@@ -34,6 +34,7 @@ public class StudentPaneAdapter extends ArrayAdapter {
 
 
     private Student student;
+    private String studentClassID;
 
     private final LayoutInflater inflater;
     private final ViewBinderHelper binderHelper;
@@ -108,14 +109,20 @@ public class StudentPaneAdapter extends ArrayAdapter {
         return convertView;
     }
 
+    private void toggleAbsentPresent(boolean isChecked, Student student) {
+        student.recordAbsentOrPresent(isChecked, studentClassID);
+    }
+    private void toggleLateArrival(boolean isChecked, Student student) {
+        student.recordLateArrival(isChecked, studentClassID);
+    }
 
-    private void toggleAbsentPresent(boolean isChecked, Student student) {}
+    private void toggleEarlyDeparture(boolean isChecked, Student student) {
+        student.recordEarlyDeparture(isChecked, studentClassID);
+    }
 
-    private void toggleLateArrival(boolean isChecked, Student student) {}
-
-    private void toggleEarlyDeparture(boolean isChecked, Student student) {}
-
-    private void toggleExcused(boolean isChecked, Student student) {}
+    private void toggleExcused(boolean isChecked, Student student) {
+        student.recordExcused(isChecked, studentClassID);
+    }
 
     private class ViewHolder {
         LinearLayout bottomLayout;
